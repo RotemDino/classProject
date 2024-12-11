@@ -81,7 +81,12 @@ Patient register_patient() {
 }
 
 int main () {
-    Person** practice = NULL;
+    Doctor doc1 = register_doctor();
+    fstream file;
+    file.open("doctor.txt", ios::app);
+    if (file.is_open()) {
+        file << doc1.
+    }
 
 
 
