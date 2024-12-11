@@ -12,7 +12,7 @@ private:
     string disease;
 public:
     Patient ();
-    Patient(string n, string g, long i, long a, string p, string d, string em);
+    Patient(string n, string g, long i, int a, string p, string d, string em);
     ~Patient();
     string getType() const;
     long getId () const;

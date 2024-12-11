@@ -10,7 +10,7 @@ using namespace std;
 
 
 // function to registrate a doctor
-Doctor regis_doc() {
+Doctor register_doctor() {
 
     // parameters
     string name;
@@ -45,6 +45,39 @@ Doctor regis_doc() {
     Doctor doctor(name,gender,id,age,password,special,is_av,rate,email,appointment,size);
     // returning the doctor to main
     return doctor;
+}
+
+Patient register_patient() {
+
+    // parameters
+    string name;
+    long id;
+    string gender;
+    int age;
+    string password;
+    string email;
+    string disease;
+
+    // user interface
+    cout << "Enter your name: ";
+    cin >> name;
+    cout << "Enter your id: ";
+    cin >> id;
+    cout << "Enter your gender: ";
+    cin >> gender;
+    cout << "Enter your age: ";
+    cin >> age;
+    cout << "Enter your password: ";
+    cin >> password;
+    cout << "Enter your email: ";
+    cin >> email;
+    cout << "Enter your disease: ";
+    cin >> disease;
+
+    // inputting the user interface
+    Patient patient(name,gender,id,age,password,disease,email);
+    // returning the patient to main
+    return patient;
 }
 
 int main () {

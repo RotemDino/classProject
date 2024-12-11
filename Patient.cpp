@@ -7,7 +7,7 @@
 Patient::Patient() {
     disease = "";
 }
-Patient::Patient(string n, string g, long i, long a, string p, string d, string em) : Person(n, g, i, a, p, em) {
+Patient::Patient(string n, string g, long i, int a, string p, string d, string em) : Person(n, g, i, a, p, em) {
     disease = d;
 }
 Patient::~Patient() {
