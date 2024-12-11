@@ -17,6 +17,12 @@ public:
     string getType() const;
     long getId () const;
     string getPassword() const;
+    string getName() const;
+    string getGender() const;
+    int getAge() const;
+    string getEmail() const;
+    string getDisease () const;
+
 
 };
 #endif //PATIENT_H

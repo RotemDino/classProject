@@ -22,6 +22,12 @@ public:
     long getId () const;
     string getPassword() const;
     string getSpecialization() const;
+    string getName() const;
+    string getGender() const;
+    long getAge() const;
+    string getEmail() const;
+
+
 
 
 };

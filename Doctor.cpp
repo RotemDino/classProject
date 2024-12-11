@@ -37,3 +37,17 @@ string Doctor::getPassword() const {
 string Doctor::getSpecialization() const {
     return specialization;
 }
+string Doctor::getName() const {
+    return name;
+}
+string Doctor::getGender() const {
+    return gender;
+}
+long Doctor::getAge() const {
+    return age;
+}
+string Doctor::getEmail() const {
+    return email;
+}
+
+

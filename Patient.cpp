@@ -21,3 +21,21 @@ long Patient::getId() const {
 string Patient::getPassword() const {
     return password;
 }
+string Patient::getName() const {
+    return name;
+}
+string Patient::getGender() const {
+    return gender;
+}
+int Patient::getAge() const {
+    return age;
+}
+string Patient::getEmail() const {
+    return email;
+}
+string Patient::getDisease() const {
+    return disease;
+}
+
+
+
