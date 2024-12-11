@@ -15,14 +15,15 @@ protected:
     long id;
     string gender;
     int age;
-    long password;
+    string password;
+    string email;
 public:
     Person();
-    Person(string n, string g, long i, long a, long p);
+    Person(string n, string g, long i, long a, string p, string em);
     virtual ~Person();
     virtual string getType() const = 0;
     virtual long getId () const = 0;
-    virtual long getPassword() const = 0;
+    virtual string getPassword() const = 0;
 
 };
 

@@ -6,17 +6,22 @@
 #define DOCTOR_H
 
 #include "Person.h"
+#include "Appointment.h"
 
 class Doctor : public Person {
 private:
     string specialization;
+    bool isAvilable;
+    int rate, size;
+    Appointment* appointments;
 public:
     Doctor ();
-    Doctor(string n, string g, long i, long a, long p, string s);
+    Doctor(string n, string g, long i, long a, string p, string s, bool av, int r, string em, Appointment* app, int size);
     ~Doctor();
     string getType() const;
     long getId () const;
-    long getPassword() const;
+    string getPassword() const;
+    string getSpecialization() const;
 
 
 };

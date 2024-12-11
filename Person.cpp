@@ -9,14 +9,16 @@ Person::Person() {
     id = 0;
     gender = "";
     age = 0;
-    password = 0;
+    password = "";
+    email = "";
 }
-Person::Person(string n, string g, long i, long a, long p) {
+Person::Person(string n, string g, long i, long a, string p, string em) {
     name = n;
     gender = g;
     id = i;
     age = a;
     password = p;
+    email = em;
 }
 Person::~Person() {
 }

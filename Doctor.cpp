@@ -7,11 +7,23 @@
 
 Doctor::Doctor() : Person() {
     specialization = "";
+    isAvilable = true;
+    rate = 0;
+    size = 0;
+    appointments = nullptr;
 }
-Doctor::Doctor(string n, string g, long i, long a, long p, string s) : Person(n, g, i, a, p) {
+Doctor::Doctor(string n, string g, long i, long a, string p, string s, bool av, int r, string em, Appointment* app, int size) : Person(n, g, i, a, p, em) {
     specialization = s;
+    isAvilable = av;
+    rate = r;
+    this->size = size;
+    appointments = new Appointment [size];
+    for (int i = 0; i < size; i++) {
+        appointments[i] = app [i];
+    }
 }
 Doctor::~Doctor() {
+    delete [] appointments;
 }
 string Doctor::getType() const {
     return "Doctor";
@@ -19,6 +31,9 @@ string Doctor::getType() const {
 long Doctor::getId() const {
     return id;
 }
-long Doctor::getPassword() const {
+string Doctor::getPassword() const {
     return password;
+}
+string Doctor::getSpecialization() const {
+    return specialization;
 }
