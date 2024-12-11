@@ -12,7 +12,7 @@ Person::Person() {
     password = "";
     email = "";
 }
-Person::Person(string n, string g, long i, long a, string p, string em) {
+Person::Person(string n, string g, long i, int a, string p, string em) {
     name = n;
     gender = g;
     id = i;

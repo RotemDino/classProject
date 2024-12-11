@@ -19,7 +19,7 @@ protected:
     string email;
 public:
     Person();
-    Person(string n, string g, long i, long a, string p, string em);
+    Person(string n, string g, long i, int a, string p, string em);
     virtual ~Person();
     virtual string getType() const = 0;
     virtual long getId () const = 0;
