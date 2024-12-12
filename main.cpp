@@ -81,26 +81,36 @@ Patient register_patient() {
     return patient;
 }
 
-int main () {
+void displayWelcomeMessage() { // prints the welcome page
+    string line = "=======================================================";
+    string message = " Welcome to the Patient and Doctor appointment System! ";
 
+    cout << line << endl;
+    cout << message;
+    cout << endl;
+    cout << line << endl;
 
-    // main menu
+    cout <<endl;
 
-    cout << "~~~Welcome to the Patient Appointment System!~~~" << endl;
+}
+
+bool main_menu() {
+    displayWelcomeMessage();
+
     cout << "Would you like to login or register to the system?" << endl;
     int choice;
     cout << "Enter your choice: | 1 = register | 2 = login " << endl;
     cin >> choice;
-    if (choice == 1) {
-        int choice2;
+
+    if (choice == 1) { // if the user chooses to register
         cout << "Are you a doctor or a patient? " << endl;
         cout << "Enter your choice: | 1 = doctor | 2 = patient " << endl;
-        cin >> choice2;
-        if (choice == 1) { // insert the doctor in the file
+        cin >> choice;
+        if (choice == 1) { // if the user decided to register as a doctor
             Doctor doc1 = register_doctor();
             fstream file;
             file.open("Doctors.txt", ios::app);
-            if (file.is_open()) {
+            if (file.is_open()) { // inputs all the information from the doctor object into the file
                 file << doc1.getName()<<endl;
                 file << doc1.getId() << endl;
                 file << doc1.getGender() << endl;
@@ -112,11 +122,12 @@ int main () {
             }
             file.close();
         }
-        if (choice == 2) { // insert the patient in the file
+
+        if (choice == 2) { // if the user decided to register as a patient
             Patient patient1 = register_patient();
             fstream file;
             file.open("Patients.txt", ios::app);
-            if (file.is_open()) {
+            if (file.is_open()) { // inputs all the information from the patient object into the file
                 file << patient1.getName()<<endl;
                 file << patient1.getId() << endl;
                 file << patient1.getGender() << endl;
@@ -129,12 +140,13 @@ int main () {
             file.close();
         }
     }
-    if (choice == 2) {
-        int choice2;
+
+    if (choice == 2) { // // if the user chooses to log in
         cout << "Are you a doctor or a patient? " << endl;
         cout << "Enter your choice: | 1 = doctor | 2 = patient " << endl;
-        cin >> choice2;
-        if (choice2 == 1) {
+        cin >> choice;
+
+        if (choice == 1) { // if the user decided to log in as a doctor
             string id,password;
             cout << "Enter your id: " << endl;
             cin >> id;
@@ -143,7 +155,7 @@ int main () {
             ifstream file("Doctors.txt");
             if (!file) {
                 cout << "File does not exist!" << endl;
-                return 1;
+                return false;
             }
             // First check for ID
             string line;
@@ -177,41 +189,67 @@ int main () {
             // Both ID and password must match
             if (idFound && passwordFound) {
                 cout << "Logged in successfully!" << endl;
-            } else {
+            }
+            else {
                 cout << "Password incorrect!" << endl;
             }
         }
+
+        if (choice == 2) { // if the user decided to log in as a patient
+            string id,password;
+            cout << "Enter your id: " << endl;
+            cin >> id;
+            cout << "Enter your password: " << endl;
+            cin >> password;
+            ifstream file("Patients.txt");
+
+            if (!file) {
+                cout << "File does not exist!" << endl;
+                return false;
+            }
+
+            string line;
+            bool idFound = false;
+            while (getline(file, line)) {
+                if (line == id) {
+                    idFound = true;
+                    break;
+                }
+            }
+
+            if (!idFound) {
+                cout << "ID not found!" << endl;
+                file.close();
+                return false;
+            }
+            file.clear();
+            file.seekg(0, ios::beg);
+            string filePassword;
+            bool passwordFound = false;
+            while (getline(file, line)) {
+                if (line == password) {
+                    passwordFound = true;
+                    break;
+                }
+            }
+            if (!passwordFound) {
+                cout << "Password incorrect!" << endl;
+                file.close();
+                return false;
+            }
+            file.close();
+            if (idFound && passwordFound)  // Ignore the warning the if condition works as intended
+                cout << "Logged in successfully!" << endl;
+            else
+                cout << "Password incorrect!" << endl;
+        }
     }
+}
 
 
-
-
-    // Doctor doc1 = register_doctor();
-    // fstream file;
-    // file.open("Doctors.txt", ios::app);
-    // if (file.is_open()) {
-    //     file << doc1.getName()<<endl;
-    //     file << doc1.getId() << endl;
-    //     file << doc1.getPassword() << endl;
-    //     file  << "----------------------------------" << endl;
-    // }
-    // file.close();
-    //
-    // ifstream MyReadFile("Doctors.txt");
-    // while (getline(MyReadFile,)) {
-    //
-    // }
-
-
-
-
-
-    // ofstream myFile ("Doctors.txt");
-    // myFile << "Doctor name: Dr. Rotem Dino, id: 123456789, age: 20" << endl;
-    // myFile.close();
-
-
-
+int main () {
+    // main menu
+    main_menu();
 
     return 0;
 }
