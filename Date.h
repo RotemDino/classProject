@@ -30,6 +30,8 @@ public:
             os << d.month << "/" << d.year << endl;
         return os;
     }
+    string get_Date () const;
+
 
 };
 

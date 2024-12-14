@@ -11,12 +11,11 @@
 class Doctor : public Person {
 private:
     string specialization;
-    bool isAvilable;
-    int rate, size;
-    Appointment* appointments;
+    bool isAvailable;
+    int rate;
 public:
     Doctor ();
-    Doctor(string n, string g, long i, long a, string p, string s, bool av, int r, string em, Appointment* app, int size);
+    Doctor(string n, string g, long i, long a, string p, string s, bool av, int r, string em);
     ~Doctor();
     string getType() const;
     long getId () const;
@@ -26,6 +25,7 @@ public:
     string getGender() const;
     long getAge() const;
     string getEmail() const;
+    bool IsAvailable() const {return isAvailable;}
 
 
 

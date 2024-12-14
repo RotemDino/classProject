@@ -55,3 +55,8 @@ bool Date::operator < (const Date &d) const {
         return true;
     return false;
 }
+
+string Date::get_Date() const {
+    return to_string(day) + to_string(month) + to_string(year);
+}
+
