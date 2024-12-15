@@ -8,14 +8,58 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <unordered_map>
 
 
 #define STARTHOUR  10:00
 #define ENDHOUR 12:00
 vector <Doctor> doctors;
 vector <Patient> patients;
+
 using namespace std;
 
+unordered_map<string, Appointment> loadAppointments() {
+    unordered_map<string, Appointment> appointments;
+    ifstream file("Appointments.txt");
+    if (!file) {
+        cout << "File does not exist!" << endl;
+        return appointments;
+    }
+
+    string line;
+    while (getline(file, line)) {
+        // Read the date
+        string date = line;
+
+        // Read the time
+        getline(file, line);
+        string time = line;
+
+        // Read the doctor ID
+        getline(file, line);
+        string doctorId = line;
+
+        // Read the patient ID
+        getline(file, line);
+        string patientId = line;
+
+        // Read the booking status
+        getline(file, line);
+        bool isBooked = line == "1";
+
+        // Skip the separator line
+        getline(file, line);
+
+        // Create an appointment object
+        Appointment appointment(date, doctorId, patientId, time, isBooked);
+
+        // Store the appointment in the map
+        appointments[patientId] = appointment;
+    }
+    file.close();
+    return appointments;
+}
+unordered_map<string, Appointment> newAppointments = loadAppointments();
 
 // function to registrate a doctor
 Doctor register_doctor() {
@@ -223,15 +267,11 @@ bool main_menu() {
 
                         }
                     }
-
                     if (choice == 2) {
                         int d,m,y;
                         cout << "Enter a specific date in which you want to block: DD/MM/YEAR" << endl;
                         cin >> d >> m >> y;
                         Date date2(d,m,y);
-
-
-
                     }
                 }
 
@@ -340,243 +380,30 @@ bool main_menu() {
 
                     // If the date is not found, schedule a new appointment
                     if (!DateFound) { // create a date in which he can view them
-                        // 1
-                        fstream file1("Appointments.txt", ios::app);
-                        if (file1.is_open()) {
-                            file1 << dateTXT << endl;             // Date of appointment
-                            file1 << "10:00" << endl;            // Appointment start time
-                            file1 << selectedDoctorId << endl;  // Random doctor's ID
-                            file1 << id << endl;
-                            file1 << is_booked << endl;
-                            file1 << "----------------------------------" << endl;
-                            // 2
-                            srand(time(0));
-                            int randomIndex2 = rand() % id_doctors.size();
-                            long selectedDoctorId2 = id_doctors[randomIndex2];
-
-                            file1 << dateTXT << endl;             // Date of appointment
-                            file1 << "10:30" << endl;            // Appointment start time
-                            file1 << selectedDoctorId2 << endl;  // Random doctor's ID
-                            file1 << id << endl;
-                            file1 << is_booked << endl;
-                            file1 << "----------------------------------" << endl;
-                            // 3
-                            srand(time(0));
-                            int randomIndex3 = rand() % id_doctors.size();
-                            long selectedDoctorId3 = id_doctors[randomIndex3];
-
-                            file1 << dateTXT << endl;             // Date of appointment
-                            file1 << "11:00" << endl;            // Appointment start time
-                            file1 << selectedDoctorId3 << endl;  // Random doctor's ID
-                            file1 << id << endl;
-                            file1 << is_booked << endl;
-                            file1 << "----------------------------------" << endl;
-                            // 4
-                            srand(time(0));
-                            int randomIndex4 = rand() % id_doctors.size();
-                            long selectedDoctorId4 = id_doctors[randomIndex4];
-
-                            file1 << dateTXT << endl;             // Date of appointment
-                            file1 << "11:30" << endl;            // Appointment start time
-                            file1 << selectedDoctorId4 << endl;  // Random doctor's ID
-                            file1 << id << endl;
-                            file1 << is_booked << endl;
-                            file1 << "----------------------------------" << endl;
-
-                        }
-                        else {
-                            cout << "Failed to open Appointments.txt for writing!" << endl;
-                        }
-                        file1.close();
-
-                        cout << "The date is available! choose from these hours: 1 = 10:00 | 2 = 10:30 | 3 = 11:00 | 4 = 11:30" << endl;
-                        cin >> choice;
+                        string choice1;
+                        cout << "The date is available! choose from these hours: 10:00 | 10:30 | 11:00 | 11:30" << endl;
+                        cin >> choice1;
+                        //
+                        // fstream file1("Appointments.txt", ios::app);
+                        // if (file1.is_open()) {
+                        //     file1 << dateTXT << endl;             // Date of appointment
+                        //     file1 << choice1 << endl;            // Appointment start time
+                        //     file1 << selectedDoctorId << endl;  // Random doctor's ID
+                        //     file1 << id << endl;
+                        //     file1 << is_booked << endl;
+                        //     file1 << "----------------------------------" << endl;
+                        // }
+                        // else {
+                        //     cout << "Failed to open Appointments.txt for writing!" << endl;
+                        // }
+                        // file1.close();
                         string realID = to_string(id);
-                        if (choice == 1) {
-                            cout << "The appointment details are:" << endl;
-                            ifstream file1("Appointments.txt");
-                            string line;
-
-                            while (getline(file1, line)) {
-                                // Check if the line matches the date
-                                if (line == dateTXT) {
-                                    // Next line will be the time
-                                    string time = "10:00";
-                                    getline(file1, time);
-
-                                    // Check if this is the 10:00 slot
-                                    if (time == "10:00") {
-                                        // Read and store the subsequent details
-                                        string doctorId, patientId, isBooked;
-                                        getline(file1, doctorId);  // Doctor ID
-                                        getline(file1, patientId); // Patient ID
-                                        getline(file1, isBooked);  // Booking status
-
-                                        // Print the appointment details
-                                        cout << "Date: " << dateTXT << endl;
-                                        cout << "Time: " << time << endl;
-                                        cout << "Doctor ID: " << doctorId << endl;
-                                        cout << "Patient ID: " << patientId << endl;
-                                        cout << "Booking Status: " << (isBooked == "1" ? "Not Booked" : "Booked") << endl;
-
-                                        // Skip the separator line
-                                        getline(file1, line);
-                                        break;
-                                    }
-                                }
-                            }
-                            file1.close();
-                        }
-                        if (choice == 2) {
-                            cout << "The appointment details are:" << endl;
-                            ifstream file1("Appointments.txt");
-                            string line;
-
-                            while (getline(file1, line)) {
-                                // Check if the line matches the date
-                                if (line == dateTXT) {
-                                    // Next line will be the time
-                                    string time = "10:30";
-                                    getline(file1, time);
-
-                                    // Check if this is the 10:30 slot
-                                    if (time == "10:30") {
-                                        // Read and store the subsequent details
-                                        string doctorId, patientId, isBooked;
-                                        getline(file1, doctorId);  // Doctor ID
-                                        getline(file1, patientId); // Patient ID
-                                        getline(file1, isBooked);  // Booking status
-
-                                        // Print the appointment details
-                                        cout << "Date: " << dateTXT << endl;
-                                        cout << "Time: " << time << endl;
-                                        cout << "Doctor ID: " << doctorId << endl;
-                                        cout << "Patient ID: " << patientId << endl;
-                                        cout << "Booking Status: " << (isBooked == "1" ? "Not Booked" : "Booked") << endl;
-
-                                        // Skip the separator line
-                                        getline(file1, line);
-                                        break;
-                                    }
-                                }
-                            }
-                            file1.close();
-                        }
-                        if (choice == 3) {
-                            cout << "The appointment details are:" << endl;
-                            ifstream file1("Appointments.txt");
-                            string line;
-
-                            while (getline(file1, line)) {
-                                // Check if the line matches the date
-                                if (line == dateTXT) {
-                                    // Next line will be the time
-                                    string time = "11:00";
-                                    getline(file1, time);
-
-                                    // Check if this is the 11:00 slot
-                                    if (time == "11:00") {
-                                        // Read and store the subsequent details
-                                        string doctorId, patientId, isBooked;
-                                        getline(file1, doctorId);  // Doctor ID
-                                        getline(file1, patientId); // Patient ID
-                                        getline(file1, isBooked);  // Booking status
-
-                                        // Print the appointment details
-                                        cout << "Date: " << dateTXT << endl;
-                                        cout << "Time: " << time << endl;
-                                        cout << "Doctor ID: " << doctorId << endl;
-                                        cout << "Patient ID: " << patientId << endl;
-                                        cout << "Booking Status: " << (isBooked == "1" ? "Not Booked" : "Booked") << endl;
-
-                                        // Skip the separator line
-                                        getline(file1, line);
-                                        break;
-                                    }
-                                }
-                            }
-                            file1.close();
-                        }
-                        if (choice == 4) {
-                            cout << "The appointment details are:" << endl;
-                            ifstream file1("Appointments.txt");
-                            string line;
-
-                            while (getline(file1, line)) {
-                                // Check if the line matches the date
-                                if (line == dateTXT) {
-                                    // Next line will be the time
-                                    string time = "11:30";
-                                    getline(file1, time);
-
-                                    // Check if this is the 11:30 slot
-                                    if (time == "11:30") {
-                                        // Read and store the subsequent details
-                                        string doctorId, patientId, isBooked;
-                                        getline(file1, doctorId);  // Doctor ID
-                                        getline(file1, patientId); // Patient ID
-                                        getline(file1, isBooked);  // Booking status
-
-                                        // Print the appointment details
-                                        cout << "Date: " << dateTXT << endl;
-                                        cout << "Time: " << time << endl;
-                                        cout << "Doctor ID: " << doctorId << endl;
-                                        cout << "Patient ID: " << patientId << endl;
-                                        cout << "Booking Status: " << (isBooked == "1" ? "Not Booked" : "Booked") << endl;
-
-                                        // Skip the separator line
-                                        getline(file1, line);
-                                        break;
-                                    }
-                                }
-                            }
-                            file1.close();
-                        }
-                    }
-                    // display all the appointments who are not booked
-                    ifstream file2("Appointments.txt");
-                    string line2;
-                    vector<string> availableAppointments;
-
-                    while (getline(file2, line2)) {
-                        // Check if the line matches the date
-                        if (line2 == dateTXT) {
-                            string time, doctorId, patientId, isBooked, separator;
-
-                            // Read the next lines
-                            getline(file2, time);        // Time
-                            getline(file2, doctorId);    // Doctor ID
-                            getline(file2, patientId);   // Patient ID
-                            getline(file2, isBooked);    // Booking status
-                            getline(file2, separator);   // Separator line
-
-                            // Check if the appointment is not booked (isBooked == "0")
-                            if (isBooked == "0") {
-                                // Format the available appointment details
-                                string availableAppointment = "Time: " + time +
-                                                              ", Doctor ID: " + doctorId;
-                                availableAppointments.push_back(availableAppointment);
+                        for (auto& pair : newAppointments) {
+                            if (pair.first == fullID && pair.second.getTime() == choice1) {
+                                pair.second.set_is_available(false);
                             }
                         }
                     }
-                    file1.close();
-
-                    // Print available appointments
-                    if (availableAppointments.empty()) {
-                        cout << "No available appointments on " << dateTXT << endl;
-                    }
-                    else {
-                        cout << "Available appointments on " << dateTXT << ":" << endl;
-                        for (const auto& appointment : availableAppointments) {
-                            cout << appointment << endl;
-                        }
-                    }
-
-                    cout << "what time would you like to schedule on appointment? " << endl;
-                    string new_time;
-                    cin >> new_time;
-
-
                 }
             }
             else
@@ -585,10 +412,13 @@ bool main_menu() {
     }
 }
 
-int main (){
+int main () {
     // main menu
     main_menu();
-
-
+    for (auto& pair : newAppointments) {
+        pair.second.print();
+    }
+    cout << "Thank you for using our system!" << endl;
     return 0;
 }
+

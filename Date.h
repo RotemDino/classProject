@@ -18,7 +18,6 @@ public:
     void printDate () const;
     bool operator < (const Date &d) const;
     bool operator == (const Date &d) const;
-    Date& operator = (const Date &d);
     friend ostream& operator << (ostream &os, const Date& d ) {
         if ( d.day <= 9 )
             os << '0' << d.day << "/";

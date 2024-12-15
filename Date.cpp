@@ -35,14 +35,6 @@ void Date::printDate() const
     else
         cout << month << "/" << year << ", ";
 }
-Date &Date::operator = (const Date &d) {
-    if (this != &d) {
-        day = d.day;
-        month = d.month;
-        year = d.year;
-    }
-    return *this;
-}
 bool Date::operator == (const Date &d) const {
     return day == d.day && month == d.month && year == d.year;
 }
