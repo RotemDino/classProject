@@ -3,8 +3,7 @@
 //
 
 #include "Doctor.h"
-#include <bits/stdc++.h>
-
+#include <iostream>
 
 Doctor::Doctor() : Person() {
     specialization = "";
@@ -16,9 +15,6 @@ Doctor::Doctor(string n, string g, string i, string a, string p, string s, strin
     ratings++;
 }
 Doctor::~Doctor() {
-}
-string Doctor::getType() const {
-    return "Doctor";
 }
 string Doctor::getId() const {
     return id;
@@ -58,4 +54,3 @@ float Doctor::set_rate(int x) {
     temp += x;
     return temp / ratings;
 }
-

@@ -21,7 +21,6 @@ public:
     Person();
     Person(string n, string g, string i, string a, string p, string em);
     virtual ~Person();
-    virtual string getType() const = 0;
     virtual string getId () const = 0;
     virtual string getPassword() const = 0;
 

@@ -12,9 +12,6 @@ Patient::Patient(string n, string g, string i, string a, string p, string d, str
 }
 Patient::~Patient() {
 }
-string Patient::getType() const {
-    return "Patient";
-}
 string Patient::getId() const {
     return id;
 }

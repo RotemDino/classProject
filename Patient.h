@@ -15,7 +15,6 @@ public:
     Patient ();
     Patient(string n, string g, string i, string a, string p, string d, string em);
     ~Patient();
-    string getType() const;
     string getId () const;
     string getPassword() const;
     string getName() const;
