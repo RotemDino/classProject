@@ -3,24 +3,24 @@
 //
 
 #include "Doctor.h"
+#include <bits/stdc++.h>
 
 
 Doctor::Doctor() : Person() {
     specialization = "";
-    isAvailable = true;
-    rate = 0;
+    rate = "0";
 }
-Doctor::Doctor(string n, string g, long i, long a, string p, string s, bool av, int r, string em) : Person(n, g, i, a, p, em) {
+Doctor::Doctor(string n, string g, string i, string a, string p, string s, string r, string em) : Person(n, g, i, a, p, em) {
     specialization = s;
-    isAvailable = av;
     rate = r;
+    ratings++;
 }
 Doctor::~Doctor() {
 }
 string Doctor::getType() const {
     return "Doctor";
 }
-long Doctor::getId() const {
+string Doctor::getId() const {
     return id;
 }
 string Doctor::getPassword() const {
@@ -35,11 +35,27 @@ string Doctor::getName() const {
 string Doctor::getGender() const {
     return gender;
 }
-long Doctor::getAge() const {
+string Doctor::getAge() const {
     return age;
 }
 string Doctor::getEmail() const {
     return email;
 }
 
+void Doctor::printDoctors() const {
+    cout << name << endl;
+    cout << id << endl;
+    cout << gender << endl;
+    cout << age << endl;
+    cout << password << endl;
+    cout << email << endl;
+    cout << specialization << endl;
+    cout << "----------------------------------" << endl;
+}
+
+float Doctor::set_rate(int x) {
+    float temp = stof(rate);
+    temp += x;
+    return temp / ratings;
+}
 

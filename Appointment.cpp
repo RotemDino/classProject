@@ -29,4 +29,17 @@ void Appointment::print() const {
 
 }
 
+void Appointment::print_for_patient() const {
+    cout << "Date: " << date << endl;
+    cout << "Time: " << time << endl;
+    cout << "Doctor ID: " << drId << endl;
+    cout << "Patient ID: " << ptId << endl;
+    if (is_available == false) {
+        cout << "Approved " << endl;
+    }
+    else {
+        cout << "Pending" << endl;
+    }
+    cout << "----------------------------------" << endl;
+}
 

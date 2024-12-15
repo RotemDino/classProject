@@ -12,17 +12,17 @@ using namespace std;
 class Person {
 protected:
     string name;
-    long id;
+    string id;
     string gender;
-    int age;
+    string age;
     string password;
     string email;
 public:
     Person();
-    Person(string n, string g, long i, int a, string p, string em);
+    Person(string n, string g, string i, string a, string p, string em);
     virtual ~Person();
     virtual string getType() const = 0;
-    virtual long getId () const = 0;
+    virtual string getId () const = 0;
     virtual string getPassword() const = 0;
 
 };

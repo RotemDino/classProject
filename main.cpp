@@ -4,27 +4,95 @@
 #include "Date.h"
 #include "Doctor.h"
 #include "Patient.h"
-#include "Person.h"
 #include <vector>
-#include <cstdlib>
 #include <ctime>
 #include <unordered_map>
 
-
-#define STARTHOUR  10:00
-#define ENDHOUR 12:00
-vector <Doctor> doctors;
-vector <Patient> patients;
-
 using namespace std;
 
+int Doctor::ratings = 0;
+
+unordered_map<string, Doctor> loadDoctors() {
+    unordered_map<string, Doctor> doctors;
+    ifstream file("Doctors.txt");
+    if (!file) {
+        cerr << "Unable to open file" << endl;
+        return doctors;
+    }
+
+    string line;
+    while (getline(file, line)) {
+        string name = line;
+
+        getline(file, line);
+        string id = line;
+
+        getline(file, line);
+        string gender = line;
+
+        getline(file, line);
+        string age = line;
+
+        getline(file, line);
+        string password = line;
+
+        getline(file, line);
+        string email = line;
+
+        getline(file, line);
+        string specialization = line;
+
+        getline(file, line);
+        string rate = line;
+
+        getline(file, line);
+
+        Doctor doctor(name,gender,id, age,password,specialization,rate,email);
+
+        doctors[id] = doctor;
+    }
+    file.close();
+    return doctors;
+}
+unordered_map<string, Patient> loadPatients() {
+    unordered_map<string, Patient> patients;
+
+    ifstream file("Patients.txt");
+    string line;
+
+    while (getline(file, line)) {
+        string name = line;
+
+        getline(file, line);
+        string id = line;
+
+        getline(file, line);
+        string gender = line;
+
+        getline(file, line);
+        string age = line;
+
+        getline(file, line);
+        string password = line;
+
+        getline(file, line);
+        string email = line;
+
+        getline(file, line);
+        string disease = line;
+
+        getline(file, line);
+
+        Patient patient(name,gender,id,age,password,disease,email);
+
+        patients[id] = patient;
+    }
+    file.close();
+    return patients;
+}
 unordered_map<string, Appointment> loadAppointments() {
     unordered_map<string, Appointment> appointments;
     ifstream file("Appointments.txt");
-    if (!file) {
-        cout << "File does not exist!" << endl;
-        return appointments;
-    }
 
     string line;
     while (getline(file, line)) {
@@ -59,21 +127,85 @@ unordered_map<string, Appointment> loadAppointments() {
     file.close();
     return appointments;
 }
+
 unordered_map<string, Appointment> newAppointments = loadAppointments();
+unordered_map<string,Doctor> newDoctors = loadDoctors();
+unordered_map<string,Patient> newPatients = loadPatients();
+
+void saveDoctors(const unordered_map<string, Doctor>& doctors) {
+    ofstream file("Doctors.txt", ios::trunc); // Open in truncate mode to clear the file
+    if (!file) {
+        cerr << "Unable to open Doctors.txt for writing!" << endl;
+        return;
+    }
+
+    for (const auto& pair : newDoctors) {
+        const Doctor& doctor = pair.second;
+        file << doctor.getName() << endl;
+        file << doctor.getId() << endl;
+        file << doctor.getGender() << endl;
+        file << doctor.getAge() << endl;
+        file << doctor.getPassword() << endl;
+        file << doctor.getEmail() << endl;
+        file << doctor.getSpecialization() << endl;
+        file << doctor.getRate() << endl;
+        file << "----------------------------------" << endl;
+    }
+    file.close();
+}
+void savePatients(const unordered_map<string, Patient>& patients) {
+    ofstream file("Patients.txt", ios::trunc); // Open in truncate mode to clear the file
+    if (!file) {
+        cerr << "Unable to open Patients.txt for writing!" << endl;
+        return;
+    }
+
+    for (const auto& pair : newPatients) {
+        const Patient& patient = pair.second;
+        file << patient.getName() << endl;
+        file << patient.getId() << endl;
+        file << patient.getGender() << endl;
+        file << patient.getAge() << endl;
+        file << patient.getPassword() << endl;
+        file << patient.getEmail() << endl;
+        file << patient.getDisease() << endl;
+        file << "----------------------------------" << endl;
+    }
+    file.close();
+}
+void saveAppointments(const unordered_map<string, Appointment>& appointments) {
+    ofstream file("Appointments.txt", ios::trunc); // Open in truncate mode to clear the file
+    if (!file) {
+        cerr << "Unable to open Appointments.txt for writing!" << endl;
+        return;
+    }
+
+    for (const auto& pair : newAppointments) {
+        const Appointment& appointment = pair.second;
+        file << appointment.get_date() << endl;
+        file << appointment.getTime() << endl;
+        file << appointment.get_drId() << endl;
+        file << appointment.get_ptId() << endl;
+        file << (appointment.get_is_available() ? "1" : "0") << endl;
+        file << "----------------------------------" << endl;
+    }
+    file.close();
+}
+
+
 
 // function to registrate a doctor
 Doctor register_doctor() {
 
     // parameters
     string name;
-    long id;
+    string id;
     string gender;
-    int age;
+    string age;
     string password;
     string email;
     string special;
-    bool is_av = true;
-    int rate = 0;
+    string rate = "0";
 
     // user interface
     cout << "Enter your name: ";
@@ -92,18 +224,17 @@ Doctor register_doctor() {
     cin >> special;
 
     // inputting the user information
-    Doctor doctor(name,gender,id,age,password,special,is_av,rate,email);
+    Doctor doctor(name,gender,id,age,password,special,rate,email);
     // returning the doctor to main
     return doctor;
 }
-
 Patient register_patient() {
 
     // parameters
     string name;
-    long id;
+    string id;
     string gender;
-    int age;
+    string age;
     string password;
     string email;
     string disease;
@@ -129,7 +260,6 @@ Patient register_patient() {
     // returning the patient to main
     return patient;
 }
-
 void displayWelcomeMessage() { // prints the welcome page
     string line = "=======================================================";
     string message = " Welcome to the Patient and Doctor appointment System! ";
@@ -142,6 +272,192 @@ void displayWelcomeMessage() { // prints the welcome page
     cout <<endl;
 
 }
+void Patient_login() {
+    string password;
+    string id;
+    cout << "Enter your id: " << endl;
+    cin >> id;
+
+    cout << "Enter your password: " << endl;
+    cin >> password;
+
+
+    for (auto &pair: newPatients) {
+        if (pair.first == id && pair.second.getPassword() == password) {
+            // menu inside the patient
+            int choice4;
+
+
+            cout << "Logged in successfully!" << endl;
+            cout << "-----------------------" << endl;
+            cout << "Input the number from the menu you would like to choose from: " << endl;
+            cout << "1. Schedule an appointment " << endl;
+            cout << "2. Cancel an appointment " << endl;
+            cout << "3. View your appointments " << endl;
+            cout << "4. Edit medical history " << endl;
+            cout << "5. Change Password " << endl;
+            cout << "6. Rate your visit" << endl;
+            cout << "7. Exit" << endl;
+
+            cin >> choice4;
+
+            if (choice4 == 1) {
+                string d,m,y;
+                cout << "Enter a specific date to schedule (DD MM YYYY): ";
+                cin >> d >> m >> y;
+                string date = d + m + y;
+
+                string time;
+                cout << "choose from these hours: 10:00 | 10:30 | 11:00 | 11:30 ";
+                cin >> time;
+
+                string special;
+                cout << "Enter the specialty of the doctor:" << endl;
+                cout << "options: " << endl;
+
+                for (auto &pair: newDoctors) {
+                    cout << pair.second.getSpecialization() << endl;
+                }
+
+                cin >> special;
+
+                string drID;
+
+                for (auto &pair: newDoctors) {
+                    if (pair.second.getSpecialization() == special) {drID = pair.first;
+                    }
+                }
+
+                cout << "id:" << drID << endl;
+                bool isAvailable = true;
+
+
+                for (auto &pair: newAppointments) {
+                    if (pair.first == id && pair.second.getTime() == time) {
+                        cout << "The appointment is already booked" << endl;
+                        isAvailable = false;
+                    }
+                }
+                if (isAvailable) {
+                    Appointment appointment(date,drID,id,time,true);
+                    newAppointments[id] = appointment;
+                    saveAppointments(newAppointments);
+                    cout << "Appointment successfully booked" << endl;
+                    cout << "-------------------------------" << endl;
+
+                    cout << "Appointment details: " << endl;
+                    appointment.print();
+                }
+            }
+            if (choice4 == 2) {
+                string d,m,y;
+                cout << "Enter a specific date to cancel (DD MM YYYY): " << endl;
+                cin >> d >> m >> y;
+                string date = d + m + y;
+
+                cout << "Details of your appointment you wish to cancel: " << endl;
+                for (auto &pair: newAppointments) {
+                    if (pair.first == id && pair.second.get_date() == date) {pair.second.print();
+                    }
+                }
+
+                int confirm;
+                cout << "Are you sure you want to cancel this appointment? 1 = YES | 2 = NO " << endl;
+                cin >> confirm;
+                if (confirm == 1) {
+                    cout << "Appointment cancelled" << endl;
+                    for (auto &pair: newAppointments) {
+                        if (pair.first == id && pair.second.get_date() == date) {
+                            pair.second.set_is_available(true);
+                            pair.second.set_ptId("0");
+                        }
+                    }
+                }
+                else {
+                    cout << "Exiting system ..." << endl;
+                    break;
+                }
+                saveAppointments(newAppointments);
+            }
+
+            if (choice4 == 3) {
+                string d,m,y;
+                cout << "Enter the date of your appointment (DD MM YYYY): " << endl;
+                cin >> d >> m >> y;
+                string date = d + m + y;
+
+                cout << "Details of your appointment: " << endl;
+                for (auto &pair: newAppointments) {
+                    if (pair.first == id && pair.second.get_date() == date) {pair.second.print();
+                    }
+                }
+            }
+
+            if (choice4 == 4) {
+                string disease;
+                cout << "Enter your new history: " << endl;
+                cin >> disease;
+                for (auto &pair: newPatients) {
+                    if (pair.first == id) {
+                        pair.second.set_disease(disease);
+                        cout << "History added" << endl;
+                    }
+                }
+                savePatients(newPatients);
+            }
+
+            if (choice4 == 5) {
+                bool valid_pass = false;
+                do {
+                    string old_pass,new_pass;
+                    cout << "Enter your previous password for confirmation: " << endl;
+                    cin >> old_pass;
+                    for (auto &pair: newPatients) {
+                        if (pair.first == id && pair.second.getPassword() == old_pass) {
+                            cout << "Password confirmed" << endl;
+                            cout << "------------------" << endl;
+                            cout << "Enter new password: " << endl;
+                            cin >> new_pass;
+                            pair.second.set_password(new_pass);
+                            cout << "Password changed successfully" << endl;
+                            valid_pass = true;
+                        }
+                        else {
+                            cout << "Wrong password" << endl;
+                            valid_pass = false;
+                        }
+                    }
+                }
+                while (!valid_pass);
+                savePatients(newPatients);
+            }
+            if (choice4 == 6) {
+                int rating;
+                string doc_id;
+                cout << "To rate your visit enter the doctor's id: " << endl;
+                cin >> doc_id;
+                cout << "Rate your appointment: 1-10 " << endl;
+                cin >> rating;
+
+
+                for (auto &pair: newDoctors) {
+                    if (pair.first == doc_id)
+                        {pair.second.set_rate(rating);
+                        cout << "Rating added successfully" << endl;
+                    }
+                }
+                saveDoctors(newDoctors);
+            }
+            if (choice4 == 7) {
+                cout << "Exiting..." << endl;
+                break;
+            }
+        }
+    }
+}
+
+
+
 
 bool main_menu() {
     displayWelcomeMessage();
@@ -152,62 +468,44 @@ bool main_menu() {
     cin >> choice;
 
     if (choice == 1) { // if the user chooses to register
+        int choice1;
         cout << "Are you a doctor or a patient? " << endl;
         cout << "Enter your choice: | 1 = doctor | 2 = patient " << endl;
-        cin >> choice;
-        if (choice == 1) { // if the user decided to register as a doctor
+        cin >> choice1;
+
+        if (choice1 == 1) {
+            // if the user decided to register as a doctor
             Doctor doc1 = register_doctor();
-            doctors.push_back(doc1);
-            fstream file;
-            file.open("Doctors.txt", ios::app);
-            if (file.is_open()) { // inputs all the information from the doctor object into the file
-                file << doc1.getName()<<endl;
-                file << 999 << doc1.getId() << endl;
-                file << doc1.getGender() << endl;
-                file << doc1.getAge() << endl;
-                file << doc1.getPassword() << endl;
-                file << doc1.getEmail() << endl;
-                file << doc1.getSpecialization() << endl;
-                file  << "----------------------------------" << endl;
-            }
-            file.close();
+
+            newDoctors[doc1.getId()] = doc1;
+            saveDoctors(newDoctors);
         }
 
-        if (choice == 2) { // if the user decided to register as a patient
+        if (choice1 == 2) {
+            // if the user decided to register as a patient
             Patient patient1 = register_patient();
-            patients.push_back(patient1);
-            fstream file;
-            file.open("Patients.txt", ios::app);
-            if (file.is_open()) { // inputs all the information from the patient object into the file
-                file << patient1.getName()<<endl;
-                file << 999 << patient1.getId() << endl;
-                file << patient1.getGender() << endl;
-                file << patient1.getAge() << endl;
-                file << patient1.getPassword() << endl;
-                file << patient1.getEmail() << endl;
-                file << patient1.getDisease() << endl;
-                file  << "----------------------------------" << endl;
-            }
-            file.close();
+
+            newPatients[patient1.getId()] = patient1;
+            savePatients(newPatients);
         }
     }
 
-    if (choice == 2) { // // if the user chooses to log in
+    if (choice == 2) { // if the user chooses to log in
+        int choice2;
         cout << "Are you a doctor or a patient? " << endl;
         cout << "Enter your choice: | 1 = doctor | 2 = patient " << endl;
-        cin >> choice;
+        cin >> choice2;
 
-        if (choice == 1) { // if the user decided to log in as a doctor
+        if (choice2 == 1) {
+            // if the user decided to log in as a doctor
             string id,password;
             cout << "Enter your id: " << endl;
             cin >> id;
             cout << "Enter your password: " << endl;
             cin >> password;
+
             ifstream file("Doctors.txt");
-            if (!file) {
-                cout << "File does not exist!" << endl;
-                return false;
-            }
+
             // First check for ID
             string line;
             bool idFound = false;
@@ -239,7 +537,8 @@ bool main_menu() {
 
             // Both ID and password must match
 
-            if (idFound && passwordFound) { // Doctor's first menu
+            if (idFound && passwordFound) {
+                // Doctor's first menu
                 cout << "Logged in successfully!" << endl;
                 cout << "-----------------------" << endl;
                 cout << "Input the number from the menu you would like to choose from: " << endl;
@@ -255,7 +554,7 @@ bool main_menu() {
                     cout << "3. Edit your profile " << endl;
                     cout << "4. Exit" << endl;
                     cin >> choice;
-// NOT FINISHED ------------ NOT FINISHED ------------ NOT FINISHED ------------ NOT FINISHED ------------ NOT FINISHED ------------ NOT FINISHED ------------
+                    // NOT FINISHED ------------ NOT FINISHED ------------ NOT FINISHED ------------ NOT FINISHED ------------ NOT FINISHED ------------ NOT FINISHED ------------
                     if (choice == 1) { // prints all the lines from the appointment file
                         int d,m,y;
                         cout << "Enter a specific date to view your appointments: DD/MM/YEAR " << endl;
@@ -274,151 +573,24 @@ bool main_menu() {
                         Date date2(d,m,y);
                     }
                 }
-
-// NOT FINISHED ------------ NOT FINISHED ------------NOT FINISHED ------------NOT FINISHED ------------NOT FINISHED ------------NOT FINISHED ------------NOT FINISHED ------------
-
-            }
-            else {
-                cout << "Password incorrect!" << endl;
             }
         }
 
-        if (choice == 2) {
-            // if the user decided to log in as a patient
-            string password;
-            long id;
-            cout << "Enter your id: " << endl;
-            cin >> id;
-            string fullID = "999" + to_string(id);
-
-            cout << "Enter your password: " << endl;
-            cin >> password;
-            ifstream file("Patients.txt");
-
-            if (!file) {
-                cout << "File does not exist!" << endl;
-                return false;
-            }
-
-            string line;
-            bool idFound = false;
-            while (getline(file, line)) {
-                if (line == fullID) {
-                    idFound = true;
-                    break;
-                }
-            }
-
-            if (!idFound) {
-                cout << "ID not found!" << endl;
-                file.close();
-                return false;
-            }
-            file.clear();
-            file.seekg(0, ios::beg);
-            string filePassword;
-            bool passwordFound = false;
-            while (getline(file, line)) {
-                if (line == password) {
-                    passwordFound = true;
-                    break;
-                }
-            }
-            if (!passwordFound) {
-                cout << "Password incorrect!" << endl;
-                file.close();
-                return false;
-            }
-            file.close();
-            if (idFound && passwordFound) {
-                // Ignore the warning the if condition works as intended
-                cout << "Logged in successfully!" << endl;
-                cout << "-----------------------" << endl;
-                cout << "Input the number from the menu you would like to choose from: " << endl;
-                cout << "1. Schedule an appointment " << endl;
-                cout << "2. Choose a " << endl;
-                cin >> choice;
-
-                if (choice == 1) {
-                    int d, m, y;
-                    cout << "Enter a specific date to schedule (DD MM YYYY): ";
-                    cin >> d >> m >> y;
-
-                    Date date1(d, m, y);
-                    string dateTXT = date1.get_Date();
-                    bool DateFound = false;
-
-                    // Check if the date already exists in the file
-                    ifstream file1("Appointments.txt");
-                    string line;
-                    while (getline(file1, line)) {
-                        if (line == dateTXT) {
-                            DateFound = true;
-                            break;
-                        }
-                    }
-                    file1.close();
-
-                    vector<long> id_doctors;
-                    ifstream file("Doctors.txt");
-                    string line1;
-
-                    while (getline(file, line1)) {
-                        // Check if the line starts with "999"
-                        if (line1.substr(0, 3) == "999") {
-                            // Extract the ID by removing the "999" prefix
-                            long doctorId = stol(line1.substr(3));
-                            id_doctors.push_back(doctorId);
-                        }
-                    }
-
-                    srand(time(0));
-                    int randomIndex = rand() % id_doctors.size();
-                    long selectedDoctorId = id_doctors[randomIndex];
-                    bool is_booked = false;
-
-
-                    // If the date is not found, schedule a new appointment
-                    if (!DateFound) { // create a date in which he can view them
-                        string choice1;
-                        cout << "The date is available! choose from these hours: 10:00 | 10:30 | 11:00 | 11:30" << endl;
-                        cin >> choice1;
-                        //
-                        // fstream file1("Appointments.txt", ios::app);
-                        // if (file1.is_open()) {
-                        //     file1 << dateTXT << endl;             // Date of appointment
-                        //     file1 << choice1 << endl;            // Appointment start time
-                        //     file1 << selectedDoctorId << endl;  // Random doctor's ID
-                        //     file1 << id << endl;
-                        //     file1 << is_booked << endl;
-                        //     file1 << "----------------------------------" << endl;
-                        // }
-                        // else {
-                        //     cout << "Failed to open Appointments.txt for writing!" << endl;
-                        // }
-                        // file1.close();
-                        string realID = to_string(id);
-                        for (auto& pair : newAppointments) {
-                            if (pair.first == fullID && pair.second.getTime() == choice1) {
-                                pair.second.set_is_available(false);
-                            }
-                        }
-                    }
-                }
-            }
-            else
-                cout << "Password incorrect!" << endl;
-        }
+        if (choice2 == 2)
+            Patient_login();
     }
 }
+
+
+
 
 int main () {
     // main menu
     main_menu();
-    for (auto& pair : newAppointments) {
-        pair.second.print();
-    }
-    cout << "Thank you for using our system!" << endl;
+
+
+
     return 0;
+
 }
 

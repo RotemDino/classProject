@@ -11,17 +11,21 @@ class Patient : public Person {
 private:
     string disease;
 public:
+
     Patient ();
-    Patient(string n, string g, long i, int a, string p, string d, string em);
+    Patient(string n, string g, string i, string a, string p, string d, string em);
     ~Patient();
     string getType() const;
-    long getId () const;
+    string getId () const;
     string getPassword() const;
     string getName() const;
     string getGender() const;
-    int getAge() const;
+    string getAge() const;
     string getEmail() const;
     string getDisease () const;
+    void printPatient() const;
+    void set_disease(string d) {disease += d;}
+    void set_password(string p) {password = p;}
 
 
 };

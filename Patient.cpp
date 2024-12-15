@@ -7,7 +7,7 @@
 Patient::Patient() {
     disease = "";
 }
-Patient::Patient(string n, string g, long i, int a, string p, string d, string em) : Person(n, g, i, a, p, em) {
+Patient::Patient(string n, string g, string i, string a, string p, string d, string em) : Person(n, g, i, a, p, em) {
     disease = d;
 }
 Patient::~Patient() {
@@ -15,7 +15,7 @@ Patient::~Patient() {
 string Patient::getType() const {
     return "Patient";
 }
-long Patient::getId() const {
+string Patient::getId() const {
     return id;
 }
 string Patient::getPassword() const {
@@ -27,7 +27,7 @@ string Patient::getName() const {
 string Patient::getGender() const {
     return gender;
 }
-int Patient::getAge() const {
+string Patient::getAge() const {
     return age;
 }
 string Patient::getEmail() const {
@@ -35,6 +35,17 @@ string Patient::getEmail() const {
 }
 string Patient::getDisease() const {
     return disease;
+}
+
+void Patient::printPatient() const {
+    cout << name << endl;
+    cout << id << endl;
+    cout << gender << endl;
+    cout << age << endl;
+    cout << password << endl;
+    cout << email << endl;
+    cout << disease << endl;
+    cout << "----------------------------------" << endl;
 }
 
 

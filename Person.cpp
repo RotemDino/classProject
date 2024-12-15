@@ -6,13 +6,13 @@
 
 Person::Person() {
     name = "";
-    id = 0;
+    id = "";
     gender = "";
-    age = 0;
+    age = "0";
     password = "";
     email = "";
 }
-Person::Person(string n, string g, long i, int a, string p, string em) {
+Person::Person(string n, string g, string i, string a, string p, string em) {
     name = n;
     gender = g;
     id = i;

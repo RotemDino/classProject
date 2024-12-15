@@ -11,21 +11,26 @@
 class Doctor : public Person {
 private:
     string specialization;
-    bool isAvailable;
-    int rate;
+    string rate;
+
+    static int ratings;
+
+
 public:
     Doctor ();
-    Doctor(string n, string g, long i, long a, string p, string s, bool av, int r, string em);
+    Doctor(string n, string g, string i, string a, string p, string s, string r, string em);
     ~Doctor();
     string getType() const;
-    long getId () const;
+    string getId() const;
     string getPassword() const;
     string getSpecialization() const;
     string getName() const;
     string getGender() const;
-    long getAge() const;
+    string getAge() const;
     string getEmail() const;
-    bool IsAvailable() const {return isAvailable;}
+    string getRate() const {return rate;}
+    void printDoctors() const;
+    float set_rate(int x);
 
 
 

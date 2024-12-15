@@ -20,6 +20,12 @@ public:
     bool get_is_available() const {return is_available;}
     string getTime() const {return time;}
     void print () const;
+    string get_date() const {return date;}
+    string get_drId() const {return drId;}
+    bool get_is_Available() const {return is_available;}
+    string get_ptId() const {return ptId;}
+    string set_ptId(string ptId) {this->ptId = ptId;}
+    void print_for_patient() const;
 
 };
 
