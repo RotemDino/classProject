@@ -5,8 +5,8 @@
 #ifndef APPOINTMENT_H
 #define APPOINTMENT_H
 
-#include "Date.h"
 #include <iomanip>
+using namespace std;
 
 class Appointment {
 private:

@@ -2,8 +2,10 @@
 // Created by Rotem Dino on 11/12/2024.
 //
 
+#include <iostream>
 #include "Appointment.h"
-#include "Date.h"
+using namespace std;
+
 Appointment::Appointment() {
     is_available = true;
     date = "";

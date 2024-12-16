@@ -10,7 +10,5 @@ add_executable(classProject main.cpp
         Doctor.h
         Patient.cpp
         Patient.h
-        Date.cpp
-        Date.h
         Appointment.cpp
         Appointment.h)

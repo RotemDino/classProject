@@ -23,7 +23,7 @@ public:
     string getEmail() const;
     string getDisease () const;
     void printPatient() const;
-    void set_disease(string d) {disease += d;}
+    void set_disease(string d) {disease += " " + d;}
     void set_password(string p) {password = p;}
 
 

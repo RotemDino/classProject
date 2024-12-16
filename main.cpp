@@ -1,145 +1,137 @@
 #include <iostream>
 #include <fstream>
 #include "Appointment.h"
-#include "Date.h"
 #include "Doctor.h"
 #include "Patient.h"
-#include <vector>
-#include <ctime>
 #include <unordered_map>
 
 using namespace std;
 
-int Doctor::ratings = 0;
+int Doctor::ratings = 0; // static parameter from the doctor class
 
-unordered_map<string, Doctor> loadDoctors() {
+// loading functions into the maps
+unordered_map<string, Doctor> loadDoctors() { // loads the information inside Doctors.txt into Doctors map
     unordered_map<string, Doctor> doctors;
     ifstream file("Doctors.txt");
-    if (!file) {
+    if (!file) { // checks if there's existing Doctors.txt file
         cerr << "Unable to open file" << endl;
         return doctors;
     }
 
     string line;
-    while (getline(file, line)) {
+    while (getline(file, line)) { // reads first line
         string name = line;
 
-        getline(file, line);
+        getline(file, line); // reads second line
         string id = line;
 
-        getline(file, line);
+        getline(file, line); // reads third line
         string gender = line;
 
-        getline(file, line);
+        getline(file, line); // reads fourth line
         string age = line;
 
-        getline(file, line);
+        getline(file, line); // reads fifth line
         string password = line;
 
-        getline(file, line);
+        getline(file, line); // reads sixth line
         string email = line;
 
-        getline(file, line);
+        getline(file, line); // reads seventh line
         string specialization = line;
 
-        getline(file, line);
+        getline(file, line); // reads eighth line
         string rate = line;
 
-        getline(file, line);
+        getline(file, line); // skips line  --------------
 
         Doctor doctor(name,gender,id, age,password,specialization,rate,email);
 
         doctors[id] = doctor;
     }
     file.close();
-    return doctors;
+    return doctors; // returns the loaded map
 }
-unordered_map<string, Patient> loadPatients() {
+unordered_map<string, Patient> loadPatients() { // loads the information inside Patients.txt into patients map
     unordered_map<string, Patient> patients;
 
     ifstream file("Patients.txt");
     string line;
 
-    while (getline(file, line)) {
+    while (getline(file, line)) { // reads first line
         string name = line;
 
-        getline(file, line);
+        getline(file, line); // reads second line
         string id = line;
 
-        getline(file, line);
+        getline(file, line); // reads third line
         string gender = line;
 
-        getline(file, line);
+        getline(file, line); // reads fourth line
         string age = line;
 
-        getline(file, line);
+        getline(file, line); // reads fifth line
         string password = line;
 
-        getline(file, line);
+        getline(file, line); // reads sixth line
         string email = line;
 
-        getline(file, line);
+        getline(file, line); // reads seventh line
         string disease = line;
 
-        getline(file, line);
+        getline(file, line); // skips line  --------------
 
         Patient patient(name,gender,id,age,password,disease,email);
 
         patients[id] = patient;
     }
     file.close();
-    return patients;
+    return patients; // returns the loaded patients
 }
-unordered_map<string, Appointment> loadAppointments() {
+unordered_map<string, Appointment> loadAppointments() { // loads the information inside Appointments.txt into appointments map
     unordered_map<string, Appointment> appointments;
     ifstream file("Appointments.txt");
 
     string line;
-    while (getline(file, line)) {
-        // Read the date
+    while (getline(file, line)) {  // reads first line
         string date = line;
 
-        // Read the time
-        getline(file, line);
+        getline(file, line); // reads second line
         string time = line;
 
-        // Read the doctor ID
-        getline(file, line);
+        getline(file, line); // reads third line
         string doctorId = line;
 
-        // Read the patient ID
-        getline(file, line);
+        getline(file, line); // reads fourth line
         string patientId = line;
 
-        // Read the booking status
-        getline(file, line);
+        getline(file, line); // reads fifth line
         bool isBooked = line == "1";
 
-        // Skip the separator line
-        getline(file, line);
+        getline(file, line); // skips line  --------------
 
-        // Create an appointment object
         Appointment appointment(date, doctorId, patientId, time, isBooked);
 
-        // Store the appointment in the map
         appointments[patientId] = appointment;
     }
     file.close();
-    return appointments;
+    return appointments; // returns the loaded appointments
 }
 
+// creating and loading the unordered maps
 unordered_map<string, Appointment> newAppointments = loadAppointments();
 unordered_map<string,Doctor> newDoctors = loadDoctors();
 unordered_map<string,Patient> newPatients = loadPatients();
 
+// saving functions from maps into files
 void saveDoctors(const unordered_map<string, Doctor>& doctors) {
     ofstream file("Doctors.txt", ios::trunc); // Open in truncate mode to clear the file
-    if (!file) {
+    if (!file) { // if the file doesnt exist
         cerr << "Unable to open Doctors.txt for writing!" << endl;
         return;
     }
 
-    for (const auto& pair : newDoctors) {
+    for (const auto& pair : newDoctors) { // inserts all the information from the maps into the files
         const Doctor& doctor = pair.second;
         file << doctor.getName() << endl;
         file << doctor.getId() << endl;
@@ -160,7 +152,7 @@ void savePatients(const unordered_map<string, Patient>& patients) {
         return;
     }
 
-    for (const auto& pair : newPatients) {
+    for (const auto& pair : newPatients) { // inserts all the information from the maps into the files
         const Patient& patient = pair.second;
         file << patient.getName() << endl;
         file << patient.getId() << endl;
@@ -180,7 +172,7 @@ void saveAppointments(const unordered_map<string, Appointment>& appointments) {
         return;
     }
 
-    for (const auto& pair : newAppointments) {
+    for (const auto& pair : newAppointments) { // inserts all the information from the maps into the files
         const Appointment& appointment = pair.second;
         file << appointment.get_date() << endl;
         file << appointment.getTime() << endl;
@@ -191,7 +183,8 @@ void saveAppointments(const unordered_map<string, Appointment>& appointments) {
     }
     file.close();
 }
-// function to registrate a doctor
+
+// main menu functions
 Doctor register_doctor() {
 
     // parameters
@@ -270,19 +263,21 @@ void displayWelcomeMessage() { // prints the welcome page
 
 }
 void Patient_login() {
+
+    // parameters
     string password;
     string id;
+
+    //user input
     cout << "Enter your id: " << endl;
     cin >> id;
-
     cout << "Enter your password: " << endl;
     cin >> password;
 
 
-    for (auto &pair: newPatients) {
+    for (auto &pair: newPatients) { // patients log in menu
         if (pair.first == id && pair.second.getPassword() == password) {
-            // menu inside the patient
-            int choice4;
+            int choice;
 
             cout << "Logged in successfully!" << endl;
             cout << "-----------------------" << endl;
@@ -295,105 +290,126 @@ void Patient_login() {
             cout << "6. Rate your visit" << endl;
             cout << "7. Exit" << endl;
 
-            cin >> choice4;
+            cin >> choice;
 
-            if (choice4 == 1) {
+            if (choice == 1) {  // schedule an appointment
+
+                // parameters
                 string d,m,y;
+                string time;
+                string special;
+                string drID;
+                bool isAvailable = true;
+
+                //user input
                 cout << "Enter a specific date to schedule (DD MM YYYY): ";
                 cin >> d >> m >> y;
                 string date = d + m + y;
-
-                string time;
-                cout << "choose from these hours: 10:00 | 10:30 | 11:00 | 11:30 ";
+                cout << "choose from these hours: 10:00 | 10:30 | 11:00 | 11:30 " << endl;
                 cin >> time;
-
-                string special;
                 cout << "Enter the specialty of the doctor:" << endl;
                 cout << "options: " << endl;
 
-                for (auto &pair: newDoctors) {
+                for (auto &pair: newDoctors) { // prints the specializations of the doctors to choose from
                     cout << pair.second.getSpecialization() << endl;
                 }
 
                 cin >> special;
 
-                string drID;
-
-                for (auto &pair: newDoctors) {
-                    if (pair.second.getSpecialization() == special) {drID = pair.first;
+                for (auto &pair: newDoctors) { // saves the id of the doctor who has the specialization into drID
+                    if (pair.second.getSpecialization() == special) {
+                        drID = pair.first;
                     }
                 }
 
                 cout << "id:" << drID << endl;
-                bool isAvailable = true;
 
-
-                for (auto &pair: newAppointments) {
-                    if (pair.first == id && pair.second.getTime() == time) {
+                for (auto &pair: newAppointments) { // checks if the appointment is already booked
+                    if (pair.first == id && pair.second.getTime() == time && pair.second.get_date() == date) {
                         cout << "The appointment is already booked" << endl;
                         isAvailable = false;
                     }
                 }
-                if (isAvailable) {
-                    Appointment appointment(date,drID,id,time,true);
+
+                if (isAvailable) { // creates a new appointment
+                    Appointment appointment(date,drID,id,time,false);
                     newAppointments[id] = appointment;
                     saveAppointments(newAppointments);
                     cout << "Appointment successfully booked" << endl;
                     cout << "-------------------------------" << endl;
-
                     cout << "Appointment details: " << endl;
                     appointment.print();
                 }
             }
-            if (choice4 == 2) {
+
+            if (choice == 2) { // cancel an appointment (needs fix)
+
+                // parameters
                 string d,m,y;
+                int confirm;
+
+                // user input
                 cout << "Enter a specific date to cancel (DD MM YYYY): " << endl;
                 cin >> d >> m >> y;
                 string date = d + m + y;
-
                 cout << "Details of your appointment you wish to cancel: " << endl;
-                for (auto &pair: newAppointments) {
-                    if (pair.first == id && pair.second.get_date() == date) {pair.second.print();
+
+                for (auto &pair: newAppointments) { // prints the appointment
+                    if (pair.first == id && pair.second.get_date() == date) {
+                        pair.second.print();
                     }
                 }
 
-                int confirm;
                 cout << "Are you sure you want to cancel this appointment? 1 = YES | 2 = NO " << endl;
                 cin >> confirm;
-                if (confirm == 1) {
+
+                if (confirm == 1) { // cancels the appointment
+
                     cout << "Appointment cancelled" << endl;
-                    for (auto &pair: newAppointments) {
+
+                    for (auto &pair: newAppointments) { // sets available to true and erases the patients id
                         if (pair.first == id && pair.second.get_date() == date) {
                             pair.second.set_is_available(true);
                             pair.second.set_ptId("0");
                         }
                     }
+                    saveAppointments(newAppointments);
                 }
+
                 else {
                     cout << "Exiting system ..." << endl;
                     break;
                 }
-                saveAppointments(newAppointments);
             }
 
-            if (choice4 == 3) {
+            if (choice == 3) { // prints the appointment
+
+                // parameters
                 string d,m,y;
+
+                // user input
                 cout << "Enter the date of your appointment (DD MM YYYY): " << endl;
                 cin >> d >> m >> y;
                 string date = d + m + y;
-
                 cout << "Details of your appointment: " << endl;
-                for (auto &pair: newAppointments) {
+
+                for (auto &pair: newAppointments) { // prints
                     if (pair.first == id && pair.second.get_date() == date) {
                         pair.second.print_for_patient();
                     }
                 }
             }
-            if (choice4 == 4) {
+
+            if (choice == 4) { // adds to the patients history
+
+                // parameters
                 string disease;
+
+                // user input
                 cout << "Enter your new history: " << endl;
                 cin >> disease;
-                for (auto &pair: newPatients) {
+
+                for (auto &pair: newPatients) { // adds to disease
                     if (pair.first == id) {
                         pair.second.set_disease(disease);
                         cout << "History added" << endl;
@@ -402,13 +418,19 @@ void Patient_login() {
                 savePatients(newPatients);
             }
 
-            if (choice4 == 5) {
+            if (choice == 5) { // change password
+
+                // parameters
                 bool valid_pass = false;
+                string old_pass,new_pass;
+
                 do {
-                    string old_pass,new_pass;
+
+                    // user input
                     cout << "Enter your previous password for confirmation: " << endl;
                     cin >> old_pass;
-                    for (auto &pair: newPatients) {
+
+                    for (auto &pair: newPatients) { // changes password
                         if (pair.first == id && pair.second.getPassword() == old_pass) {
                             cout << "Password confirmed" << endl;
                             cout << "------------------" << endl;
@@ -425,16 +447,21 @@ void Patient_login() {
                     }
                 }
                 while (!valid_pass);
+
                 savePatients(newPatients);
             }
-            if (choice4 == 6) {
+
+            if (choice == 6) { // updates the doctors rating (needs fix)
+
+                // parameters
                 int rating;
                 string doc_id;
+
+                // user input
                 cout << "To rate your visit enter the doctor's id: " << endl;
                 cin >> doc_id;
                 cout << "Rate your appointment: 1-10 " << endl;
                 cin >> rating;
-
 
                 for (auto &pair: newDoctors) {
                     if (pair.first == doc_id)
@@ -444,7 +471,8 @@ void Patient_login() {
                 }
                 saveDoctors(newDoctors);
             }
-            if (choice4 == 7) {
+
+            if (choice == 7) { // exit
                 cout << "Exiting..." << endl;
                 break;
             }
@@ -481,13 +509,17 @@ void Doctor_login() {
         cin >> choice;
 
         if (choice == 1) { // doctor's personal menu
+            cout << "------------------------------------------------------------" << endl;
             cout << "Input the number from the menu you would like to choose from: " << endl;
             cout << "1. View current appointments " << endl;
             cout << "2. Block a certain date for an appointment " << endl;
             cout << "3. Edit your profile " << endl;
             cout << "4. Exit" << endl;
             cin >> choice;
+
             if (choice == 1) {
+
+                bool appointmentFound = false;
                 // prints all the lines from the appointment file
                 string d,m,y;
                 cout << "Enter a specific date to view your appointments: DD/MM/YEAR " << endl;
@@ -496,10 +528,16 @@ void Doctor_login() {
 
                 for (const auto& pair : newAppointments) {
                     if (pair.second.get_drId() == id && pair.second.get_date() == date) {
+                        appointmentFound = true;
                         pair.second.print();
                     }
                 }
+
+                if (!appointmentFound) {
+                    cout << "You have no appointments at that date!" << endl;
+                }
             }
+
             if (choice == 2) {
                 string d,m,y;
                 cout << "Enter a specific date in which you want to block: DD/MM/YEAR" << endl;
