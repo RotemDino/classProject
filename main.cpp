@@ -262,6 +262,31 @@ void displayWelcomeMessage() { // prints the welcome page
     cout <<endl;
 
 }
+void printMedicineList() {
+    cout << "Medicine List:" << endl;
+    cout << "----------------------------------------------------" << endl;
+    cout << "1. Paracetamol (Acetaminophen)" << endl;
+    cout << "   Use: Pain relief and fever reduction" << endl;
+    cout << endl;
+    cout << "2. Ibuprofen" << endl;
+    cout << "   Use: Pain, inflammation, and fever" << endl;
+    cout << endl;
+    cout << "3. Amoxicillin" << endl;
+    cout << "   Use: Treatment of bacterial infections" << endl;
+    cout << endl;
+    cout << "4. Metformin" << endl;
+    cout << "   Use: Management of type 2 diabetes" << endl;
+    cout << endl;
+    cout << "5. Atorvastatin" << endl;
+    cout << "   Use: Lowering cholesterol and preventing cardiovascular disease" << endl;
+    cout << endl;
+    cout << "6. Omeprazole" << endl;
+    cout << "   Use: Treatment of acid reflux and stomach ulcers" << endl;
+    cout << endl;
+    cout << "7. Ciprofloxacin" << endl;
+    cout << "   Use: Treatment of various bacterial infections, including UTIs" << endl;
+    cout << "----------------------------------------------------" << endl;
+}
 void Patient_login() {
 
     // parameters
@@ -493,13 +518,17 @@ void Patient_login() {
     }
 }
 void Doctor_login() {
+
+    // parameters
     string id,password;
+    bool idFound = false;
+    bool passwordFound = false;
+
+    // user input
     cout << "Enter your id: " << endl;
     cin >> id;
     cout << "Enter your password: " << endl;
     cin >> password;
-    bool idFound = false;
-    bool passwordFound = false;
 
     for (const auto& pair : newDoctors ) {
         if (pair.first == id && pair.second.getPassword() == password) {
@@ -509,9 +538,12 @@ void Doctor_login() {
         }
     }
 
-    // Both ID and password must match
-    if (idFound && passwordFound) {
+    if (idFound && passwordFound) { // checks if the login is valid
+
+        // parameters
         int choice;
+
+
         // Doctor's first menu
         cout << "Logged in successfully!" << endl;
         cout << "-----------------------" << endl;
@@ -530,16 +562,18 @@ void Doctor_login() {
             cout << "4. Exit" << endl;
             cin >> choice;
 
-            if (choice == 1) {
+            if (choice == 1) { // View current appointments
 
+                // parameters
                 bool appointmentFound = false;
-                // prints all the lines from the appointment file
                 string d,m,y;
+
+                // user input
                 cout << "Enter a specific date to view your appointments: DD/MM/YEAR " << endl;
                 cin >> d >> m >> y;
                 string date = d + m + y;
 
-                for (const auto& pair : newAppointments) {
+                for (const auto& pair : newAppointments) { // print appointments
                     if (pair.second.get_drId() == id && pair.second.get_date() == date) {
                         appointmentFound = true;
                         pair.second.print();
@@ -551,22 +585,29 @@ void Doctor_login() {
                 }
             }
 
-            if (choice == 2) {
+            if (choice == 2) { // block a date for an appointment
+
+                // parameters
+
+                // user input
                 string d,m,y;
                 cout << "Enter a specific date in which you want to block: DD/MM/YEAR" << endl;
                 cin >> d >> m >> y;
                 string date = d + m + y;
 
-                for (auto& pair : newAppointments) {
+                for (auto& pair : newAppointments) { // set the is_available to false
                     if (pair.second.get_drId() == id && pair.second.get_date() == date) {
                         pair.second.set_is_available(false);
                     }
                 }
                 saveAppointments(newAppointments);
             }
-            if (choice == 3) {
+            if (choice == 3) { // Edit your profile
+
+                // paramters
                 string name,password, email, special;
                 int choice1;
+
                 do {
                     cout << "What would you like to edit? " << endl;
                     cout << "1. Name " << endl;
@@ -576,7 +617,7 @@ void Doctor_login() {
                     cout << "5. Exit " << endl;
                     cin >> choice1;
                     switch (choice1) {
-                        case 1: {
+                        case 1: { // edit name
                             cout << "Enter your new name: " << endl;
                             cin >> name;
                             for (auto& pair : newDoctors) {
@@ -587,7 +628,7 @@ void Doctor_login() {
                             saveDoctors(newDoctors);
                             break;
                         }
-                        case 2: {
+                        case 2: { // edit password
                             bool valid_pass = false;
                             do {
                                 string old_pass;
@@ -613,7 +654,7 @@ void Doctor_login() {
                             saveDoctors(newDoctors);
                             break;
                         }
-                        case 3: {
+                        case 3: { // edit email
                             cout << "Enter your new Email: " << endl;
                             cin >> email;
                             for (auto& pair : newDoctors) {
@@ -624,7 +665,7 @@ void Doctor_login() {
                             saveDoctors(newDoctors);
                             break;
                         }
-                        case 4: {
+                        case 4: { // edit specialization
                             cout << "Enter your new specialization: " << endl;
                             cin >> special;
                             for (auto& pair : newDoctors) {
@@ -635,7 +676,7 @@ void Doctor_login() {
                             saveDoctors(newDoctors);
                             break;
                         }
-                        case 5: {
+                        case 5: { // exit
                             cout << "Exiting..." << endl;
                             break;
                         }
@@ -647,60 +688,73 @@ void Doctor_login() {
                 }
                 while (choice1 != 5);
             }
-            if (choice == 4) {
+            if (choice == 4) { // exit
                 cout << "Exiting..." << endl;
             }
         }
-        if (choice == 2) {
+        if (choice == 2) { // patients menu for the doctor
+
+            // user input
             cout << "Input the number from the menu you would like to choose from: " << endl;
             cout << "1. Edit patient's medical history " << endl;
             cout << "2. View medicine list" << endl;
             cout << "3. Exit " << endl;
             cin >> choice;
-            if (choice == 1) {
+
+            if (choice == 1) { // edit patients medical history
+
+                // parameters
                 string patient_id;
+                int choice7;
+
+                // user input
                 cout << "Enter the patient's id: " << endl;
                 cin >> patient_id;
-                for ( auto& pair: newPatients)  {
+
+                for ( auto& pair: newPatients)  { // options for the medical history
                     if (pair.first == patient_id) {
-                        int choice7;
+
+                        // user input
                         cout << "1. Edit patient's medical history" << endl;
                         cout << "2. View patient's medical history" << endl;
                         cin >> choice7;
-                        if (choice7 == 1) {
+
+                        if (choice7 == 1) { // edit history
+
+                            // parameters
                             string disease;
+
+                            // user input
                             cout << "Enter the new medical history: " << endl;
                             cin >> disease;
-                            pair.second.set_disease(disease);
                             cout << "Medical history added successfully" << endl;
+
+                            pair.second.set_disease(disease); // adds to the patients history
                         }
-                        if (choice7 == 2) {
+                        if (choice7 == 2) { // view patients history
+
+                            // user input
                             cout << "Patient's medical history: " << endl;
                             cout << pair.second.getDisease() << endl;
                         }
-                        if (choice7 == 3) {
+
+                        if (choice7 == 3) { // exit
                             cout << "Exiting..." << endl;
                         }
-
                     }
                 }
                 savePatients(newPatients);
             }
-            if (choice == 2) {
-                cout << "Medicine list: " << endl;
-                cout << "1. Paracetamol (Acetaminophen) – Commonly used to relieve pain and reduce fever. " << endl;
-                cout << "2. Ibuprofen – A non-steroidal anti-inflammatory drug (NSAID) used for pain, inflammation, and fever." << endl;
-                cout << "3. Amoxicillin – An antibiotic used to treat bacterial infections." << endl;
-                cout << "4. Metformin – Commonly prescribed for managing type 2 diabetes." << endl;
-                cout << "5. Atorvastatin – Used to lower cholesterol and prevent cardiovascular disease." << endl;
-                cout << "6. Omeprazole – A proton pump inhibitor used to treat acid reflux and stomach ulcers." << endl;
-                cout << "7. Ciprofloxacin – An antibiotic used to treat various bacterial infections, including urinary tract infections." << endl;
+
+            if (choice == 2) { // prints medicine list
+                printMedicineList();
             }
-            if (choice == 3) {
+
+            if (choice == 3) { // exit
                 cout << "Exiting..." << endl;
             }
         }
-        if (choice == 3) {
+        if (choice == 3) { // exit
             cout << "Exiting..." << endl;
         }
     }
