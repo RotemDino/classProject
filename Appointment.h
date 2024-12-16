@@ -16,7 +16,7 @@ private:
 public:
     Appointment();
     Appointment(string d, string dr, string pt, string t, bool is_av);
-    void set_is_available(bool x) {is_available = x;}
+    void set_is_available(bool x);
     bool get_is_available() const {return is_available;}
     string getTime() const {return time;}
     void print () const;

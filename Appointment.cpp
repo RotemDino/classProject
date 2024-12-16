@@ -45,3 +45,7 @@ void Appointment::print_for_patient() const {
     cout << "----------------------------------" << endl;
 }
 
+void Appointment::set_is_available(bool const x) {
+    is_available = x;
+}
+

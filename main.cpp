@@ -342,10 +342,10 @@ void Patient_login() {
                 }
             }
 
-            if (choice == 2) { // cancel an appointment (needs fix)
+            if (choice == 2) { // cancel an appointment
 
                 // parameters
-                string d,m,y;
+                string d,m,y,appointmentKey;
                 int confirm;
 
                 // user input
@@ -357,23 +357,23 @@ void Patient_login() {
                 for (auto &pair: newAppointments) { // prints the appointment
                     if (pair.first == id && pair.second.get_date() == date) {
                         pair.second.print();
+                        appointmentKey = pair.first;
                     }
                 }
 
                 cout << "Are you sure you want to cancel this appointment? 1 = YES | 2 = NO " << endl;
                 cin >> confirm;
 
-                if (confirm == 1) { // cancels the appointment
+                if (confirm == 1) { // erases the appointment from the map and the file
 
                     cout << "Appointment cancelled" << endl;
 
-                    for (auto &pair: newAppointments) { // sets available to true and erases the patients id
+                    for (auto& pair: newAppointments) { // sets available to true and erases the patients id
                         if (pair.first == id && pair.second.get_date() == date) {
-                            pair.second.set_is_available(true);
-                            pair.second.set_ptId("0");
+                            newAppointments.erase(appointmentKey);
+                            saveAppointments(newAppointments);
                         }
                     }
-                    saveAppointments(newAppointments);
                 }
 
                 else {
@@ -772,7 +772,8 @@ bool main_menu() {
 
 int main () {
     // main menu
-    main_menu();
+
+
 
     return 0;
 
