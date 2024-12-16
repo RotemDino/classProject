@@ -451,25 +451,38 @@ void Patient_login() {
                 savePatients(newPatients);
             }
 
-            if (choice == 6) { // updates the doctors rating (needs fix)
+            if (choice == 6) { // updates the doctors rating
 
                 // parameters
                 int rating;
-                string doc_id;
+                string doc_id,nameDoc;
 
                 // user input
-                cout << "To rate your visit enter the doctor's id: " << endl;
-                cin >> doc_id;
+
+                cout << "list of doctors: " << endl;
+                for (const auto &pair: newDoctors) { // prints the names of the doctors
+                    cout << pair.second.getName() << endl;
+                }
+
+                cout << "Type the name of the doctor you wish to rate: " << endl;
+                cin >> nameDoc;
+
+                for (const auto &pair: newDoctors) {
+                    if (pair.second.getName() == nameDoc) {
+                        doc_id = pair.first;
+                    }
+                }
+
                 cout << "Rate your appointment: 1-10 " << endl;
                 cin >> rating;
 
-                for (auto &pair: newDoctors) {
-                    if (pair.first == doc_id)
-                        {pair.second.set_rate(rating);
+                for (auto &pair: newDoctors) { // updates rating
+                    if (pair.first == doc_id) {
+                        pair.second.set_rate(rating);
                         cout << "Rating added successfully" << endl;
+                        saveDoctors(newDoctors);
                     }
                 }
-                saveDoctors(newDoctors);
             }
 
             if (choice == 7) { // exit
@@ -771,7 +784,10 @@ bool main_menu() {
 
 
 int main () {
-    // main menu
+    main_menu();
+    /*for (const auto& pair: newDoctors) {
+        pair.second.printDoctors();
+    }*/
 
 
 

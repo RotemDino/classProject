@@ -12,6 +12,8 @@ class Doctor : public Person {
 private:
     string specialization;
     string rate;
+    float totalRating;
+    int ratingCount;
 
     static int ratings;
 
@@ -36,11 +38,8 @@ public:
     void setAge(string x) {age = x;}
     void setEmail(string x) {email = x;}
     void printDoctors() const;
-    float set_rate(int x);
-
-
-
-
+    void set_rate(int newRating);
+    float getAverageRating() const;
 };
 
 

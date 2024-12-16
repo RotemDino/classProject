@@ -1,12 +1,3 @@
-Svetlana
-317798765
-female
-47
-4554
-sveta@example.com
-Brain
-0
-----------------------------------
 Benny
 317723546
 male
@@ -14,5 +5,14 @@ male
 1987
 benny@example.com
 throat
+0
+----------------------------------
+Svetlana
+317798765
+female
+47
+4554
+sveta@example.com
+Brain
 0
 ----------------------------------
