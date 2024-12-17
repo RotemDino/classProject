@@ -94,6 +94,9 @@ unordered_map<string, Appointment> loadAppointments() { // loads the information
 
     string line;
     while (getline(file, line)) {  // reads first line
+        string key = line;
+
+        getline(file, line); // reads second line
         string date = line;
 
         getline(file, line); // reads second line
@@ -111,8 +114,9 @@ unordered_map<string, Appointment> loadAppointments() { // loads the information
         getline(file, line); // skips line  --------------
 
         Appointment appointment(date, doctorId, patientId, time, isBooked);
+        key = date + time + patientId;
 
-        appointments[patientId] = appointment;
+        appointments[key] = appointment;
     }
     file.close();
     return appointments; // returns the loaded appointments
@@ -174,6 +178,7 @@ void saveAppointments(const unordered_map<string, Appointment>& appointments) {
 
     for (const auto& pair : newAppointments) { // inserts all the information from the maps into the files
         const Appointment& appointment = pair.second;
+        file << appointment.get_date()+appointment.getTime()+appointment.get_ptId() << endl;
         file << appointment.get_date() << endl;
         file << appointment.getTime() << endl;
         file << appointment.get_drId() << endl;
@@ -348,9 +353,10 @@ void Patient_login() {
                 }
 
                 cout << "id:" << drID << endl;
+                string key = date + time + id;
 
                 for (auto &pair: newAppointments) { // checks if the appointment is already booked
-                    if (pair.first == id && pair.second.getTime() == time && pair.second.get_date() == date) {
+                    if (pair.first == key && pair.second.getTime() == time && pair.second.get_date() == date) {
                         cout << "The appointment is already booked" << endl;
                         isAvailable = false;
                     }
@@ -358,7 +364,7 @@ void Patient_login() {
 
                 if (isAvailable) { // creates a new appointment
                     Appointment appointment(date,drID,id,time,false);
-                    newAppointments[id] = appointment;
+                    newAppointments[key] = appointment;
                     saveAppointments(newAppointments);
                     cout << "Appointment successfully booked" << endl;
                     cout << "-------------------------------" << endl;
@@ -370,8 +376,10 @@ void Patient_login() {
             if (choice == 2) { // cancel an appointment
 
                 // parameters
-                string d,m,y,appointmentKey;
+                string d,m,y;
                 int confirm;
+                string key;
+
 
                 // user input
                 cout << "Enter a specific date to cancel (DD MM YYYY): " << endl;
@@ -380,9 +388,9 @@ void Patient_login() {
                 cout << "Details of your appointment you wish to cancel: " << endl;
 
                 for (auto &pair: newAppointments) { // prints the appointment
-                    if (pair.first == id && pair.second.get_date() == date) {
+                    if (pair.second.get_ptId() == id && pair.second.get_date() == date) {
                         pair.second.print();
-                        appointmentKey = pair.first;
+                        key = pair.first;
                     }
                 }
 
@@ -394,8 +402,8 @@ void Patient_login() {
                     cout << "Appointment cancelled" << endl;
 
                     for (auto& pair: newAppointments) { // sets available to true and erases the patients id
-                        if (pair.first == id && pair.second.get_date() == date) {
-                            newAppointments.erase(appointmentKey);
+                        if (pair.first == key && pair.second.get_date() == date) {
+                            newAppointments.erase(key);
                             saveAppointments(newAppointments);
                         }
                     }
@@ -419,7 +427,7 @@ void Patient_login() {
                 cout << "Details of your appointment: " << endl;
 
                 for (auto &pair: newAppointments) { // prints
-                    if (pair.first == id && pair.second.get_date() == date) {
+                    if (pair.second.get_ptId() == id && pair.second.get_date() == date) {
                         pair.second.print_for_patient();
                     }
                 }
@@ -604,7 +612,7 @@ void Doctor_login() {
             }
             if (choice == 3) { // Edit your profile
 
-                // paramters
+                // parameters
                 string name,password, email, special;
                 int choice1;
 
@@ -842,6 +850,7 @@ int main () {
     /*for (const auto& pair: newDoctors) {
         pair.second.printDoctors();
     }*/
+
 
 
 
