@@ -5,10 +5,6 @@
 #include "Patient.h"
 
 
-
-
-
-
 Patient::Patient() {
     name = "";
     gender = "";

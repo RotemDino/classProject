@@ -12,13 +12,10 @@ int Doctor::ratings = 0; // static parameter from the doctor class
 // loading functions into the maps
 unordered_map<string, Doctor> loadDoctors() { // loads the information inside Doctors.txt into Doctors map
     unordered_map<string, Doctor> doctors;
-    ifstream file("Doctors.txt");
-    if (!file) { // checks if there's existing Doctors.txt file
-        cerr << "Unable to open file" << endl;
-        return doctors;
-    }
 
+    ifstream file("Doctors.txt");
     string line;
+
     while (getline(file, line)) { // reads first line
         string name = line;
 
@@ -290,7 +287,6 @@ void printMedicineList() {
     cout << endl;
     cout << "7. Ciprofloxacin" << endl;
     cout << "   Use: Treatment of various bacterial infections, including UTIs" << endl;
-    cout << "----------------------------------------------------" << endl;
 }
 void Patient_login() {
 
@@ -307,221 +303,227 @@ void Patient_login() {
 
     for (auto &pair: newPatients) { // patients log in menu
         if (pair.first == id && pair.second.getPassword() == password) {
-            int choice;
-
             cout << "Logged in successfully!" << endl;
-            cout << "-----------------------" << endl;
-            cout << "Input the number from the menu you would like to choose from: " << endl;
-            cout << "1. Schedule an appointment " << endl;
-            cout << "2. Cancel an appointment " << endl;
-            cout << "3. View your appointments " << endl;
-            cout << "4. Edit medical history " << endl;
-            cout << "5. Change Password " << endl;
-            cout << "6. Rate your visit" << endl;
-            cout << "7. Exit" << endl;
 
-            cin >> choice;
+            int choice = 0;
+            while (choice != 7) {
+                cout << "-----------------------" << endl;
+                cout << "Input the number from the menu you would like to choose from: " << endl;
+                cout << "1. Schedule an appointment " << endl;
+                cout << "2. Cancel an appointment " << endl;
+                cout << "3. View your appointments " << endl;
+                cout << "4. Edit medical history " << endl;
+                cout << "5. Change Password " << endl;
+                cout << "6. Rate your visit" << endl;
+                cout << "7. Exit" << endl;
 
-            if (choice == 1) {  // schedule an appointment
+                cin >> choice;
 
-                // parameters
-                string d,m,y;
-                string time;
-                string special;
-                string drID;
-                bool isAvailable = true;
+                switch (choice) {
+                    case 1: {   // schedule an appointment
+                        // parameters
+                        string d,m,y;
+                        string time;
+                        string special;
+                        string drID;
+                        bool isAvailable = true;
 
-                //user input
-                cout << "Enter a specific date to schedule (DD MM YYYY): ";
-                cin >> d >> m >> y;
-                string date = d + m + y;
-                cout << "choose from these hours: 10:00 | 10:30 | 11:00 | 11:30 " << endl;
-                cin >> time;
-                cout << "Enter the specialty of the doctor:" << endl;
-                cout << "options: " << endl;
+                        //user input
+                        cout << "Enter a specific date to schedule (DD MM YYYY): ";
+                        cin >> d >> m >> y;
+                        string date = d + m + y;
+                        cout << "choose from these hours: 10:00 | 10:30 | 11:00 | 11:30 " << endl;
+                        cin >> time;
+                        cout << "Enter the specialty of the doctor:" << endl;
+                        cout << "options: " << endl;
 
-                for (auto &pair: newDoctors) { // prints the specializations of the doctors to choose from
-                    cout << pair.second.getSpecialization() << endl;
-                }
+                        for (auto &pair: newDoctors) { // prints the specializations of the doctors to choose from
+                            cout << pair.second.getSpecialization() << endl;
+                        }
 
-                cin >> special;
+                        cin >> special;
 
-                for (auto &pair: newDoctors) { // saves the id of the doctor who has the specialization into drID
-                    if (pair.second.getSpecialization() == special) {
-                        drID = pair.first;
-                    }
-                }
+                        for (auto &pair: newDoctors) { // saves the id of the doctor who has the specialization into drID
+                            if (pair.second.getSpecialization() == special) {
+                                drID = pair.first;
+                            }
+                        }
 
-                cout << "id:" << drID << endl;
-                string key = date + time + id;
+                        cout << "id:" << drID << endl;
+                        string key = date + time + id;
 
-                for (auto &pair: newAppointments) { // checks if the appointment is already booked
-                    if (pair.first == key && pair.second.getTime() == time && pair.second.get_date() == date) {
-                        cout << "The appointment is already booked" << endl;
-                        isAvailable = false;
-                    }
-                }
+                        for (auto &pair: newAppointments) { // checks if the appointment is already booked
+                            if (pair.first == key && pair.second.getTime() == time && pair.second.get_date() == date) {
+                                cout << "The appointment is already booked" << endl;
+                                isAvailable = false;
+                            }
+                        }
 
-                if (isAvailable) { // creates a new appointment
-                    Appointment appointment(date,drID,id,time,true);
-                    newAppointments[key] = appointment;
-                    saveAppointments(newAppointments);
-                    cout << "Appointment successfully booked" << endl;
-                    cout << "-------------------------------" << endl;
-                    cout << "Appointment details: " << endl;
-                    appointment.print();
-                }
-            }
-
-            if (choice == 2) { // cancel an appointment
-
-                // parameters
-                string d,m,y;
-                int confirm;
-                string key;
-
-
-                // user input
-                cout << "Enter a specific date to cancel (DD MM YYYY): " << endl;
-                cin >> d >> m >> y;
-                string date = d + m + y;
-                cout << "Details of your appointment you wish to cancel: " << endl;
-
-                for (auto &pair: newAppointments) { // prints the appointment
-                    if (pair.second.get_ptId() == id && pair.second.get_date() == date) {
-                        pair.second.print();
-                        key = pair.first;
-                    }
-                }
-
-                cout << "Are you sure you want to cancel this appointment? 1 = YES | 2 = NO " << endl;
-                cin >> confirm;
-
-                if (confirm == 1) { // erases the appointment from the map and the file
-
-                    cout << "Appointment cancelled" << endl;
-
-                    for (auto& pair: newAppointments) { // sets available to true and erases the patients id
-                        if (pair.first == key && pair.second.get_date() == date) {
-                            newAppointments.erase(key);
+                        if (isAvailable) { // creates a new appointment
+                            Appointment appointment(date,drID,id,time,true);
+                            newAppointments[key] = appointment;
                             saveAppointments(newAppointments);
+                            cout << "Appointment successfully booked" << endl;
+                            cout << "-------------------------------" << endl;
+                            cout << "Appointment details: " << endl;
+                            appointment.print();
                         }
+                        break;
                     }
-                }
+                    case 2: {   // cancel an appointment
+                        // parameters
+                        string d,m,y;
+                        int confirm;
+                        string key;
+                        bool cancel = false;
 
-                else {
-                    cout << "Exiting system ..." << endl;
-                    break;
-                }
-            }
+                        // user input
+                        cout << "Enter a specific date to cancel (DD MM YYYY): " << endl;
+                        cin >> d >> m >> y;
+                        string date = d + m + y;
 
-            if (choice == 3) { // prints the appointment
-
-                // parameters
-                string d,m,y;
-
-                // user input
-                cout << "Enter the date of your appointment (DD MM YYYY): " << endl;
-                cin >> d >> m >> y;
-                string date = d + m + y;
-                cout << "Details of your appointment: " << endl;
-
-                for (auto &pair: newAppointments) { // prints
-                    if (pair.second.get_ptId() == id && pair.second.get_date() == date) {
-                        pair.second.print_for_patient();
-                    }
-                }
-            }
-
-            if (choice == 4) { // adds to the patients history
-
-                // parameters
-                string disease;
-
-                // user input
-                cout << "Enter your new history: " << endl;
-                cin >> disease;
-
-                for (auto &pair: newPatients) { // adds to disease
-                    if (pair.first == id) {
-                        pair.second.set_disease(disease);
-                        cout << "History added" << endl;
-                    }
-                }
-                savePatients(newPatients);
-            }
-
-            if (choice == 5) { // change password
-
-                // parameters
-                bool valid_pass = false;
-                string old_pass,new_pass;
-
-                do {
-
-                    // user input
-                    cout << "Enter your previous password for confirmation: " << endl;
-                    cin >> old_pass;
-
-                    for (auto &pair: newPatients) { // changes password
-                        if (pair.first == id && pair.second.getPassword() == old_pass) {
-                            cout << "Password confirmed" << endl;
-                            cout << "------------------" << endl;
-                            cout << "Enter new password: " << endl;
-                            cin >> new_pass;
-                            pair.second.set_password(new_pass);
-                            cout << "Password changed successfully" << endl;
-                            valid_pass = true;
+                        for (auto &pair: newAppointments) {
+                            // prints the appointment
+                            if (pair.second.get_ptId() == id && pair.second.get_date() == date) {
+                                cancel = true;
+                                cout << "Details of your appointment you wish to cancel: " << endl;
+                                pair.second.print();
+                                key = pair.first;
+                                cout << "Are you sure you want to cancel this appointment? 1 = YES | 2 = NO " << endl;
+                                cin >> confirm;
+                                if (confirm == 1) { // erases the appointment from the map and the file
+                                    cout << "Appointment cancelled" << endl;
+                                    for (auto& pair: newAppointments) { // sets available to true and erases the patients id
+                                        if (pair.first == key && pair.second.get_date() == date) {
+                                            newAppointments.erase(key);
+                                            saveAppointments(newAppointments);
+                                        }
+                                    }
+                                }
+                                else {
+                                    cout << "Appointment not cancelled" << endl;
+                                    break;
+                                }
+                            }
                         }
-                        else {
-                            cout << "Wrong password" << endl;
-                            valid_pass = false;
+                        if (!cancel) {
+                            cout << "You have no appointments at that date" << endl;
                         }
+                        break;
+                    }
+                    case 3: {    // prints the appointment
+                        // parameters
+                        string d,m,y;
+
+                        // user input
+                        cout << "Enter the date of your appointment (DD MM YYYY): " << endl;
+                        cin >> d >> m >> y;
+                        string date = d + m + y;
+
+                        for (auto &pair: newAppointments) { // prints
+                            if (pair.second.get_ptId() == id && pair.second.get_date() == date) {
+                                cout << "Details of your appointment: " << endl;
+                                pair.second.print_for_patient();
+                            }
+                            else
+                                cout << "You have no appointments at that date" << endl;
+                        }
+                        break;
+                    }
+                    case 4: {  // adds to the patients history
+                        // parameters
+                        string disease;
+
+                        // user input
+                        cout << "Enter your new history: " << endl;
+                        cin >> disease;
+
+                        for (auto &pair: newPatients) { // adds to disease
+                            if (pair.first == id) {
+                                pair.second.set_disease(disease);
+                                cout << "History added" << endl;
+                            }
+                        }
+                        savePatients(newPatients);
+                        break;
+                    }
+                    case 5: { // change password
+                        // parameters
+                        bool valid_pass = false;
+                        string old_pass,new_pass;
+
+                        do {
+
+                            // user input
+                            cout << "Enter your previous password for confirmation: " << endl;
+                            cin >> old_pass;
+
+                            for (auto &pair: newPatients) { // changes password
+                                if (pair.first == id && pair.second.getPassword() == old_pass) {
+                                    cout << "Password confirmed" << endl;
+                                    cout << "------------------" << endl;
+                                    cout << "Enter new password: " << endl;
+                                    cin >> new_pass;
+                                    pair.second.set_password(new_pass);
+                                    cout << "Password changed successfully" << endl;
+                                    valid_pass = true;
+                                    savePatients(newPatients);
+                                    break;
+                                }
+                            }
+                            if (!valid_pass) {
+                                cout << "Wrong password" << endl;
+                            }
+                        }
+                        while (!valid_pass);
+                        break;
+                    }
+                    case 6: {  // updates the doctors rating
+
+                        // parameters
+                        int rating;
+                        string doc_id,nameDoc;
+
+                        // user input
+
+                        cout << "list of doctors: " << endl;
+                        for (const auto &pair: newDoctors) { // prints the names of the doctors
+                            cout << pair.second.getName() << endl;
+                        }
+
+                        cout << "Type the name of the doctor you wish to rate: " << endl;
+                        cin >> nameDoc;
+
+                        for (const auto &pair: newDoctors) {
+                            if (pair.second.getName() == nameDoc) {
+                                doc_id = pair.first;
+                            }
+                        }
+
+                        cout << "Rate your appointment: 1-10 " << endl;
+                        cin >> rating;
+
+                        for (auto &pair: newDoctors) { // updates rating
+                            if (pair.first == doc_id) {
+                                pair.second.set_rate(rating);
+                                cout << "Rating added successfully" << endl;
+                                saveDoctors(newDoctors);
+                            }
+                        }
+                        break;
+                    }
+                    case 7: {
+                        // exit
+                        cout << "Exiting..." << endl;
+                        break;
+                    }
+                    default: {
+                        cout << "Invalid choice, please try again." << endl;
+                        break;
                     }
                 }
-                while (!valid_pass);
-
-                savePatients(newPatients);
             }
 
-            if (choice == 6) { // updates the doctors rating
-
-                // parameters
-                int rating;
-                string doc_id,nameDoc;
-
-                // user input
-
-                cout << "list of doctors: " << endl;
-                for (const auto &pair: newDoctors) { // prints the names of the doctors
-                    cout << pair.second.getName() << endl;
-                }
-
-                cout << "Type the name of the doctor you wish to rate: " << endl;
-                cin >> nameDoc;
-
-                for (const auto &pair: newDoctors) {
-                    if (pair.second.getName() == nameDoc) {
-                        doc_id = pair.first;
-                    }
-                }
-
-                cout << "Rate your appointment: 1-10 " << endl;
-                cin >> rating;
-
-                for (auto &pair: newDoctors) { // updates rating
-                    if (pair.first == doc_id) {
-                        pair.second.set_rate(rating);
-                        cout << "Rating added successfully" << endl;
-                        saveDoctors(newDoctors);
-                    }
-                }
-            }
-
-            if (choice == 7) { // exit
-                cout << "Exiting..." << endl;
-                break;
-            }
         }
     }
 }
@@ -547,223 +549,240 @@ void Doctor_login() {
     }
 
     if (idFound && passwordFound) { // checks if the login is valid
-
+        cout << "Logged in successfully!" << endl;
         // parameters
         int choice;
 
-
-        // Doctor's first menu
-        cout << "Logged in successfully!" << endl;
-        cout << "-----------------------" << endl;
-        cout << "Input the number from the menu you would like to choose from: " << endl;
-        cout << "1. Enter doctor's menu" << endl;
-        cout << "2. Enter patient's menu" << endl;
-        cout << "3. Exit" << endl;
-        cin >> choice;
-
-        if (choice == 1) { // doctor's personal menu
-            cout << "------------------------------------------------------------" << endl;
+        while (choice != 3) {
+            // Doctor's first menu
+            cout << "-----------------------" << endl;
             cout << "Input the number from the menu you would like to choose from: " << endl;
-            cout << "1. View current appointments " << endl;
-            cout << "2. Block a certain date for an appointment " << endl;
-            cout << "3. Edit your profile " << endl;
-            cout << "4. Exit" << endl;
+            cout << "1. Enter doctor's menu" << endl;
+            cout << "2. Enter patient's menu" << endl;
+            cout << "3. Exit" << endl;
             cin >> choice;
+            switch (choice) {
+                // doctor's personal menu
+                case 1: {
+                    int choice1 = 0;
+                    while (choice1 != 4) {
+                        cout << "------------------------------------------------------------" << endl;
+                        cout << "Input the number from the menu you would like to choose from: " << endl;
+                        cout << "1. View current appointments " << endl;
+                        cout << "2. Block a certain date for an appointment " << endl;
+                        cout << "3. Edit your profile " << endl;
+                        cout << "4. Exit" << endl;
+                        cin >> choice1;
+                        switch (choice1) {
+                            case 1: {
+                                // View current appointments
+                                // parameters
+                                bool appointmentFound = false;
+                                string d,m,y;
 
-            if (choice == 1) { // View current appointments
+                                // user input
+                                cout << "Enter a specific date to view your appointments: DD/MM/YEAR " << endl;
+                                cin >> d >> m >> y;
+                                string date = d + m + y;
 
-                // parameters
-                bool appointmentFound = false;
-                string d,m,y;
-
-                // user input
-                cout << "Enter a specific date to view your appointments: DD/MM/YEAR " << endl;
-                cin >> d >> m >> y;
-                string date = d + m + y;
-
-                for (const auto& pair : newAppointments) { // print appointments
-                    if (pair.second.get_drId() == id && pair.second.get_date() == date) {
-                        appointmentFound = true;
-                        pair.second.print();
-                    }
-                }
-
-                if (!appointmentFound) {
-                    cout << "You have no appointments at that date!" << endl;
-                }
-            }
-
-            if (choice == 2) { // block a date for an appointment
-
-                // parameters
-
-                // user input
-                string d,m,y;
-                cout << "Enter a specific date in which you want to block: DD/MM/YEAR" << endl;
-                cin >> d >> m >> y;
-                string date = d + m + y;
-
-                for (auto& pair : newAppointments) { // set the is_available to false
-                    if (pair.second.get_drId() == id && pair.second.get_date() == date) {
-                        pair.second.set_is_available(false);
-                    }
-                }
-                saveAppointments(newAppointments);
-            }
-            if (choice == 3) { // Edit your profile
-
-                // parameters
-                string name,password, email, special;
-                int choice1;
-
-                do {
-                    cout << "What would you like to edit? " << endl;
-                    cout << "1. Name " << endl;
-                    cout << "2. Password " << endl;
-                    cout << "3. Email " << endl;
-                    cout << "4. Specialization " << endl;
-                    cout << "5. Exit " << endl;
-                    cin >> choice1;
-                    switch (choice1) {
-                        case 1: { // edit name
-                            cout << "Enter your new name: " << endl;
-                            cin >> name;
-                            for (auto& pair : newDoctors) {
-                                if (pair.first == id) {
-                                    pair.second.setName(name);
-                                }
-                            }
-                            saveDoctors(newDoctors);
-                            break;
-                        }
-                        case 2: { // edit password
-                            bool valid_pass = false;
-                            do {
-                                string old_pass;
-                                cout << "Enter your previous password for confirmation: " << endl;
-                                cin >> old_pass;
-                                for (auto &pair: newDoctors) {
-                                    if (pair.first == id && pair.second.getPassword() == old_pass) {
-                                        cout << "Password confirmed" << endl;
-                                        cout << "------------------" << endl;
-                                        cout << "Enter new password: " << endl;
-                                        cin >> password;
-                                        pair.second.setPassword(password);
-                                        cout << "Password changed successfully" << endl;
-                                        valid_pass = true;
-                                    }
-                                    else {
-                                        cout << "Wrong password" << endl;
-                                        valid_pass = false;
+                                for (const auto& pair : newAppointments) { // print appointments
+                                    if (pair.second.get_drId() == id && pair.second.get_date() == date) {
+                                        appointmentFound = true;
+                                        pair.second.print();
                                     }
                                 }
-                            }
-                            while (!valid_pass);
-                            saveDoctors(newDoctors);
-                            break;
-                        }
-                        case 3: { // edit email
-                            cout << "Enter your new Email: " << endl;
-                            cin >> email;
-                            for (auto& pair : newDoctors) {
-                                if (pair.first == id) {
-                                    pair.second.setEmail(email);
+
+                                if (!appointmentFound) {
+                                    cout << "You have no appointments at that date!" << endl;
                                 }
+                                break;
                             }
-                            saveDoctors(newDoctors);
-                            break;
-                        }
-                        case 4: { // edit specialization
-                            cout << "Enter your new specialization: " << endl;
-                            cin >> special;
-                            for (auto& pair : newDoctors) {
-                                if (pair.first == id) {
-                                    pair.second.setSpecialization(special);
+                            case 2: {  // block a date for an appointment
+                                // parameters
+                                string d,m,y;
+                                // user input
+                                cout << "Enter a specific date in which you want to block: DD/MM/YEAR" << endl;
+                                cin >> d >> m >> y;
+                                string date = d + m + y;
+
+                                for (auto& pair : newAppointments) { // set the is_available to false
+                                    if (pair.second.get_drId() == id && pair.second.get_date() == date) {
+                                        pair.second.set_is_available(false);
+                                        cout << "Date blocked successfully" << endl;
+                                    }
+                                    else
+                                        cout << "No appointments at that date" << endl;
                                 }
+                                saveAppointments(newAppointments);
+                                break;
                             }
-                            saveDoctors(newDoctors);
-                            break;
-                        }
-                        case 5: { // exit
-                            cout << "Exiting..." << endl;
-                            break;
-                        }
-                        default: {
-                            cout << "Invalid choice, please try again." << endl;
-                            break;
+                            case 3: {
+                                // Edit your profile
+                                // parameters
+                                string name,password, email, special;
+                                int choice1;
+
+                                do {
+                                    cout << "What would you like to edit? " << endl;
+                                    cout << "1. Name " << endl;
+                                    cout << "2. Password " << endl;
+                                    cout << "3. Email " << endl;
+                                    cout << "4. Specialization " << endl;
+                                    cout << "5. Exit " << endl;
+                                    cin >> choice1;
+                                    switch (choice1) {
+                                        case 1: { // edit name
+                                            cout << "Enter your new name: " << endl;
+                                            cin >> name;
+                                            for (auto& pair : newDoctors) {
+                                                if (pair.first == id) {
+                                                    pair.second.setName(name);
+                                                }
+                                            }
+                                            saveDoctors(newDoctors);
+                                            break;
+                                        }
+                                        case 2: { // edit password
+                                            bool valid_pass = false;
+                                            do {
+                                                string old_pass;
+                                                cout << "Enter your previous password for confirmation: " << endl;
+                                                cin >> old_pass;
+                                                for (auto &pair: newDoctors) {
+                                                    if (pair.first == id && pair.second.getPassword() == old_pass) {
+                                                        cout << "Password confirmed" << endl;
+                                                        cout << "------------------" << endl;
+                                                        cout << "Enter new password: " << endl;
+                                                        cin >> password;
+                                                        pair.second.setPassword(password);
+                                                        cout << "Password changed successfully" << endl;
+                                                        valid_pass = true;
+                                                    }
+                                                    else {
+                                                        cout << "Wrong password" << endl;
+                                                        valid_pass = false;
+                                                    }
+                                                }
+                                            }
+                                            while (!valid_pass);
+                                            saveDoctors(newDoctors);
+                                            break;
+                                        }
+                                        case 3: { // edit email
+                                            cout << "Enter your new Email: " << endl;
+                                            cin >> email;
+                                            for (auto& pair : newDoctors) {
+                                                if (pair.first == id) {
+                                                    pair.second.setEmail(email);
+                                                }
+                                            }
+                                            saveDoctors(newDoctors);
+                                            break;
+                                        }
+                                        case 4: { // edit specialization
+                                            cout << "Enter your new specialization: " << endl;
+                                            cin >> special;
+                                            for (auto& pair : newDoctors) {
+                                                if (pair.first == id) {
+                                                    pair.second.setSpecialization(special);
+                                                }
+                                            }
+                                            saveDoctors(newDoctors);
+                                            break;
+                                        }
+                                        case 5: { // exit
+                                            cout << "Exiting..." << endl;
+                                            break;
+                                        }
+                                        default: {
+                                            cout << "Invalid choice, please try again." << endl;
+                                            break;
+                                        }
+                                    }
+                                }
+                                while (choice1 != 5);
+                                break;
+                            }
+                            case 4: { // exit
+                                break;
+                            }
+                            default: {
+                                cout << "Invalid choice, please try again." << endl;
+                                break;
+                            }
                         }
                     }
+                    break;
                 }
-                while (choice1 != 5);
-            }
-            if (choice == 4) { // exit
-                cout << "Exiting..." << endl;
-            }
-        }
-        if (choice == 2) { // patients menu for the doctor
+                case 2: {  // patients menu for the doctor
+                    // user input
+                    cout << "Input the number from the menu you would like to choose from: " << endl;
+                    cout << "1. Edit patient's medical history " << endl;
+                    cout << "2. View medicine list" << endl;
+                    cout << "3. Exit " << endl;
+                    cin >> choice;
 
-            // user input
-            cout << "Input the number from the menu you would like to choose from: " << endl;
-            cout << "1. Edit patient's medical history " << endl;
-            cout << "2. View medicine list" << endl;
-            cout << "3. Exit " << endl;
-            cin >> choice;
+                    if (choice == 1) { // edit patients medical history
 
-            if (choice == 1) { // edit patients medical history
-
-                // parameters
-                string patient_id;
-                int choice7;
-
-                // user input
-                cout << "Enter the patient's id: " << endl;
-                cin >> patient_id;
-
-                for ( auto& pair: newPatients)  { // options for the medical history
-                    if (pair.first == patient_id) {
+                        // parameters
+                        string patient_id;
+                        int choice7;
 
                         // user input
-                        cout << "1. Edit patient's medical history" << endl;
-                        cout << "2. View patient's medical history" << endl;
-                        cin >> choice7;
+                        cout << "Enter the patient's id: " << endl;
+                        cin >> patient_id;
 
-                        if (choice7 == 1) { // edit history
+                        for ( auto& pair: newPatients)  { // options for the medical history
+                            if (pair.first == patient_id) {
 
-                            // parameters
-                            string disease;
+                                // user input
+                                cout << "1. Edit patient's medical history" << endl;
+                                cout << "2. View patient's medical history" << endl;
+                                cin >> choice7;
 
-                            // user input
-                            cout << "Enter the new medical history: " << endl;
-                            cin >> disease;
-                            cout << "Medical history added successfully" << endl;
+                                if (choice7 == 1) { // edit history
 
-                            pair.second.set_disease(disease); // adds to the patients history
+                                    // parameters
+                                    string disease;
+
+                                    // user input
+                                    cout << "Enter the new medical history: " << endl;
+                                    cin >> disease;
+                                    cout << "Medical history added successfully" << endl;
+
+                                    pair.second.set_disease(disease); // adds to the patients history
+                                }
+                                if (choice7 == 2) { // view patients history
+
+                                    // user input
+                                    cout << "Patient's medical history: " << endl;
+                                    cout << pair.second.getDisease() << endl;
+                                }
+                                if (choice7 == 3) { // exit
+                                    cout << "Exiting..." << endl;
+                                    cout << "------------------------------------------------------------" << endl;
+                                }
+                            }
                         }
-                        if (choice7 == 2) { // view patients history
-
-                            // user input
-                            cout << "Patient's medical history: " << endl;
-                            cout << pair.second.getDisease() << endl;
-                        }
-
-                        if (choice7 == 3) { // exit
-                            cout << "Exiting..." << endl;
-                        }
+                        savePatients(newPatients);
                     }
+                    if (choice == 2) { // prints medicine list
+                        printMedicineList();
+                    }
+                    else
+                        break;
+                    break;
                 }
-                savePatients(newPatients);
+                case 3: { // exit
+                    cout << "Exiting..." << endl;
+                    cout << "------------------------------------------------------------" << endl;
+                    break;
+                }
+                default: {
+                    cout << "Invalid choice, please try again." << endl;
+                    break;
+                }
             }
-
-            if (choice == 2) { // prints medicine list
-                printMedicineList();
-            }
-
-            if (choice == 3) { // exit
-                cout << "Exiting..." << endl;
-            }
-        }
-        if (choice == 3) { // exit
-            cout << "Exiting..." << endl;
         }
     }
 
@@ -845,14 +864,7 @@ bool main_menu() {
 
 int main () {
     main_menu();
-    /*for (const auto& pair: newDoctors) {
-        pair.second.printDoctors();
-    }*/
-
-
-
 
     return 0;
-
 }
 
