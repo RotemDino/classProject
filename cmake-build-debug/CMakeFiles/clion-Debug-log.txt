@@ -1,4 +1,0 @@
-/home/oria5050/Documents/programs/Clion/clion-2024.3/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" -S /home/oria5050/CLionProjects/classProjectFixes -B /home/oria5050/CLionProjects/classProjectFixes/cmake-build-debug
--- Configuring done (0.0s)
--- Generating done (0.0s)
--- Build files have been written to: /home/oria5050/CLionProjects/classProjectFixes/cmake-build-debug

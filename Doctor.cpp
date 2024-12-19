@@ -5,21 +5,34 @@
 #include "Doctor.h"
 #include <iostream>
 
-Doctor::Doctor() : Person() {
+Doctor::Doctor() {
+    name = "";
+    gender = "";
+    id = "";
+    age = "";
+    password = "";
+    rate = "";
+    email = "";
     specialization = "";
-    rate = "0";
+    ratings++;
     totalRating = 0;
     ratingCount = 0;
 }
-Doctor::Doctor(string n, string g, string i, string a, string p, string s, string r, string em) : Person(n, g, i, a, p, em) {
+
+Doctor::Doctor(string n, string g, string i, string a, string p, string s, string r, string em) {
+    name  = n;
+    gender = g;
+    id = i;
+    age = a;
+    password = p;
+    email = em;
     specialization = s;
     rate = r;
     ratings++;
     totalRating = 0;
     ratingCount = 0;
 }
-Doctor::~Doctor() {
-}
+
 string Doctor::getId() const {
     return id;
 }

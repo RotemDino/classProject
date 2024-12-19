@@ -4,15 +4,21 @@
 
 #ifndef PATIENT_H
 #define PATIENT_H
-#include "Person.h"
+#include <iostream>
+using namespace std;
 
 
-class Patient : public Person {
+class Patient{
 private:
     string disease;
+    string name;
+    string gender;
+    string id;
+    string age;
+    string password;
+    string email;
 public:
-
-    Patient ();
+    Patient();
     Patient(string n, string g, string i, string a, string p, string d, string em);
     ~Patient();
     string getId () const;

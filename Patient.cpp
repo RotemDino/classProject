@@ -4,11 +4,28 @@
 
 #include "Patient.h"
 
+
+
+
+
+
 Patient::Patient() {
+    name = "";
+    gender = "";
+    id = "";
+    age = "";
+    password = "";
     disease = "";
+    email = "";
 }
-Patient::Patient(string n, string g, string i, string a, string p, string d, string em) : Person(n, g, i, a, p, em) {
+Patient::Patient(string n, string g, string i, string a, string p, string d, string em) {
+    name  = n;
+    gender = g;
+    id = i;
+    age = a;
+    password = p;
     disease = d;
+    email = em;
 }
 Patient::~Patient() {
 }

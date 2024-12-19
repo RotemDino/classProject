@@ -4,8 +4,6 @@ project(classProject)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(classProject main.cpp
-        Person.cpp
-        Person.h
         Doctor.cpp
         Doctor.h
         Patient.cpp

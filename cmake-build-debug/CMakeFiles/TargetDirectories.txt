@@ -1,3 +1,0 @@
-/home/oria5050/CLionProjects/classProjectFixes/cmake-build-debug/CMakeFiles/classProject.dir
-/home/oria5050/CLionProjects/classProjectFixes/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/oria5050/CLionProjects/classProjectFixes/cmake-build-debug/CMakeFiles/rebuild_cache.dir

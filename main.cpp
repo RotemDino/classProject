@@ -363,7 +363,7 @@ void Patient_login() {
                 }
 
                 if (isAvailable) { // creates a new appointment
-                    Appointment appointment(date,drID,id,time,false);
+                    Appointment appointment(date,drID,id,time,true);
                     newAppointments[key] = appointment;
                     saveAppointments(newAppointments);
                     cout << "Appointment successfully booked" << endl;
@@ -841,8 +841,6 @@ bool main_menu() {
         }
     }
 }
-
-
 
 
 int main () {

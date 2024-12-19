@@ -4,24 +4,25 @@
 
 #ifndef DOCTOR_H
 #define DOCTOR_H
+#include <iostream>
+using namespace std;
 
-#include "Person.h"
-#include "Appointment.h"
-
-class Doctor : public Person {
+class Doctor  {
 private:
+    string name;
+    string gender;
+    string id;
+    string age;
+    string password;
+    string email;
     string specialization;
     string rate;
     float totalRating;
     int ratingCount;
-
     static int ratings;
-
-
 public:
-    Doctor ();
+    Doctor();
     Doctor(string n, string g, string i, string a, string p, string s, string r, string em);
-    ~Doctor();
     string getId() const;
     string getPassword() const;
     string getSpecialization() const;
